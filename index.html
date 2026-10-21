@@ -1,1059 +1,859 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MotionMind AI — Create. Analyze. Grow Faster.</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='13' fill='%238b5cf6'/%3E%3Cpath d='M21 14 L36 24 L21 34 Z' fill='%23fff'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FFF7EF">
+<meta name="description" content="MotionMind AI: a YouTube creator toolkit for ideas, thumbnails, titles, tags, scripts and planning. Tools that need live YouTube data are labelled.">
+<title>MotionMind AI — YouTube Creator Toolkit</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23A52D50'/%3E%3Cstop offset='1' stop-color='%23641A32'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='48' height='48' rx='14' fill='url(%23g)'/%3E%3Cpath d='M18 15 L34 24 L18 33 Z' fill='%23FFF7FA'/%3E%3C/svg%3E">
+<script>
+(function(){try{var t=localStorage.getItem("mm-theme");document.documentElement.setAttribute("data-theme",t==="dark"?"dark":"light");if(localStorage.getItem("mm-motion")==="1")document.documentElement.classList.add("no-motion");}catch(e){document.documentElement.setAttribute("data-theme","light");}})();
+</script>
 <style>
-:root{--bg:#050816;--panel:rgba(18,22,48,.78);--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.12);--text:#f4f5ff;--muted:#aab1d8;--c:#22d3ee;--v:#8b5cf6;--b:#3b82f6;--grad:linear-gradient(135deg,#8b5cf6,#3b82f6 55%,#22d3ee);--danger:#fb7185;--ok:#34d399;--warn:#fbbf24;--in:rgba(4,6,18,.7)}
-:root[data-theme="light"]{--bg:#eef1fb;--panel:rgba(255,255,255,.94);--card:#f6f7ff;--line:rgba(20,26,58,.14);--text:#151b3b;--muted:#50597f;--danger:#c81e4a;--ok:#047857;--warn:#92400e;--in:#fff}
-[hidden]{display:none!important}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:72px;-webkit-text-size-adjust:100%}
-body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh;overflow-x:hidden;background-image:radial-gradient(circle at 15% -5%,rgba(139,92,246,.30),transparent 40%),radial-gradient(circle at 90% 10%,rgba(34,211,238,.15),transparent 38%),radial-gradient(circle at 50% 100%,rgba(59,130,246,.12),transparent 45%)}
-button,input,select,textarea{font:inherit;color:inherit}
-h1,h2,h3{line-height:1.2;margin:0}
-p{margin:6px 0;overflow-wrap:anywhere}
-img,video{max-width:100%;height:auto}
-:focus-visible{outline:3px solid var(--c);outline-offset:2px}
-.wrap{max-width:1080px;margin:0 auto;padding:16px}
-section{scroll-margin-top:72px;margin-bottom:24px}
-.glass{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px;min-width:0;overflow-wrap:anywhere;box-shadow:0 20px 44px -30px rgba(0,0,0,.8)}
-.muted{color:var(--muted)}
-.small{font-size:13px;color:var(--muted)}
-.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-.reveal.in{opacity:1;transform:none}
-.lbl-s{display:none}
-
-/* HEADER */
-header.top{position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.top-in{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;max-width:1080px;margin:0 auto}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);min-width:0}
-.brand svg{width:34px;height:34px;flex:none}
-.brand strong{display:block;font-size:17px}
-.brand small{display:block;color:var(--muted);font-size:11px}
-.nav{display:flex;gap:2px}
-.nav a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:10px;font-size:14px;transition:color .2s,background .2s}
-.nav a:hover{color:var(--text);background:var(--card)}
-.top-actions{display:flex;gap:6px;align-items:center;flex:none}
-.menu-btn{display:none}
-#motionBtn[aria-pressed="true"]{border-color:var(--c)}
-.mobile-nav{display:none;padding:8px 16px 14px;border-top:1px solid var(--line)}
-.mobile-nav.open{display:grid;gap:6px}
-.mobile-nav a{padding:12px;border-radius:12px;background:var(--card);border:1px solid var(--line);color:var(--text);text-decoration:none}
-@media(max-width:860px){.nav{display:none}.menu-btn{display:inline-flex}}
-@media(max-width:420px){
-  .top-in{padding:10px 12px}
-  .brand strong{font-size:16px}
-  .brand small{display:none}
-  .top-actions{gap:4px}
-  .top-actions .btn.sm{padding:7px 9px;font-size:13px}
-  .lbl-l{display:none}
-  .lbl-s{display:inline}
-}
-
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:46px;padding:10px 16px;border:0;border-radius:12px;background:var(--grad);color:#fff;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;max-width:100%;transition:transform .15s,box-shadow .25s,opacity .2s}
-.btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px -12px rgba(139,92,246,.95)}
-.btn:active{transform:scale(.96)}
-.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
-.btn.ghost{background:var(--in);color:var(--text);border:1px solid var(--line)}
-.btn.ghost:hover{border-color:var(--c);box-shadow:0 0 0 1px var(--c) inset}
-.btn.sm{min-height:38px;padding:7px 12px;font-size:14px;border-radius:10px}
-.btn.lg{min-height:54px;font-size:17px;padding:12px 22px}
-.btn.block{width:100%}
-
-/* HERO */
-.hero{display:grid;gap:22px;align-items:center;padding:28px 0 8px}
-@media(min-width:900px){.hero{grid-template-columns:1.05fr .95fr}}
-.hero h1{font-size:clamp(30px,6vw,58px);letter-spacing:-1px;overflow-wrap:break-word}
-.hero .sub{color:var(--muted);font-size:17px;max-width:520px}
-.pill{display:inline-block;font-size:13px;border:1px solid var(--line);border-radius:999px;padding:5px 12px;background:var(--card);color:var(--muted);max-width:100%}
-.pill.ok{color:var(--ok);border-color:var(--ok)}
-.pill.err{color:var(--danger);border-color:var(--danger)}
-.pill.busy{color:var(--c);border-color:var(--c)}
-.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-.cta .btn{flex:1 1 150px}
-.hero-stage{position:relative;min-height:340px;display:grid;place-items:center;border-radius:26px;border:1px solid var(--line);background:radial-gradient(circle at 50% 35%,rgba(139,92,246,.42),transparent 60%),radial-gradient(circle at 50% 110%,rgba(34,211,238,.25),transparent 50%),var(--card);overflow:hidden;perspective:900px}
-.fx{position:absolute;display:flex;gap:8px;align-items:center;padding:8px 12px;border-radius:14px;background:var(--panel);border:1px solid var(--line);font-size:12px;font-weight:600;white-space:nowrap;box-shadow:0 10px 24px -14px rgba(0,0,0,.8);animation:floaty 5s ease-in-out infinite}
-.fx svg{width:18px;height:18px;flex:none}
-.fx1{top:9%;left:4%}.fx2{top:14%;right:4%;animation-delay:-1.5s}.fx3{bottom:12%;left:6%;animation-delay:-3s}.fx4{bottom:8%;right:6%;animation-delay:-2s}
-.spark{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c);animation:twinkle 2.6s ease-in-out infinite}
-.enter{animation:enter .8s cubic-bezier(.2,.7,.2,1) both}
-.enter-2{animation-delay:.15s}.enter-3{animation-delay:.3s}.enter-4{animation-delay:.45s}
-@keyframes enter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-@media(max-width:420px){
-  .hero-stage{min-height:300px}
-  .fx{font-size:11px;padding:6px 9px;gap:5px}
-  .fx svg{width:14px;height:14px}
-  .fx1{top:4%;left:3%}.fx2{top:6%;right:3%}.fx3{bottom:6%;left:3%}.fx4{bottom:4%;right:3%}
-  .cta .btn{flex:1 1 100%}
-}
-
-/* 3D-STYLE MASCOT */
-.mascot-wrap{position:relative;width:100%;max-width:280px;aspect-ratio:200/230;margin:0 auto;transform:rotateY(var(--rx,0deg)) rotateX(var(--ry,0deg));transition:transform .4s ease;transform-style:preserve-3d;cursor:pointer;z-index:1;border-radius:24px}
-.mascot-wrap.sm{max-width:120px}
-.mascot-wrap:focus-visible{outline:3px solid var(--c);outline-offset:6px}
-.mascot-wrap svg{display:block;width:100%;height:100%;overflow:visible}
-.bot-float{animation:float 4.2s ease-in-out infinite}
-.shadow{transform-box:fill-box;transform-origin:center;animation:shadowPulse 4.2s ease-in-out infinite}
-.head{transform-box:view-box;transform-origin:100px 80px;animation:headTilt 7s ease-in-out infinite}
-.lid{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0);animation:blink 5s infinite}
-.pupil{animation:look 4s ease-in-out infinite}
-.arm{transform-box:fill-box;transform-origin:50% 0;animation:armIdle 4s ease-in-out infinite}
-.eyes-happy,.eyes-sad,.m-flat,.m-frown,.m-grin,.beam{display:none}
-.mascot.thinking .pupil{animation:look 1.1s ease-in-out infinite}
-.mascot.thinking .m-smile{display:none}
-.mascot.thinking .m-flat{display:inline}
-.mascot.scanning .beam{display:inline;animation:beamMove 2s ease-in-out infinite}
-.mascot.scanning .arm-r{animation:armScan 1.2s ease-in-out infinite alternate}
-.mascot.celebrate .bot-float{animation:hop .7s ease-in-out infinite alternate}
-.mascot.celebrate .arm{animation:cheer .6s ease-in-out infinite alternate}
-.mascot.celebrate .eyes-open,.mascot.celebrate .m-smile{display:none}
-.mascot.celebrate .eyes-happy,.mascot.celebrate .m-grin{display:inline}
-.mascot.sad .head{animation:none;transform:rotate(12deg)}
-.mascot.sad .eyes-open,.mascot.sad .m-smile{display:none}
-.mascot.sad .eyes-sad,.mascot.sad .m-frown{display:inline}
-.mascot.sad .glow{opacity:.25}
-.mascot.wave .arm-r{animation:wave .5s ease-in-out 3 alternate}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
-@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-@keyframes shadowPulse{0%,100%{transform:scale(1);opacity:.9}50%{transform:scale(.8);opacity:.5}}
-@keyframes headTilt{0%,100%{transform:rotate(0)}30%{transform:rotate(-4deg)}65%{transform:rotate(3deg)}}
-@keyframes blink{0%,93%,100%{transform:scaleY(0)}95%{transform:scaleY(1)}}
-@keyframes look{0%,100%{transform:translateX(0)}50%{transform:translateX(2px)}}
-@keyframes armIdle{0%,100%{transform:rotate(0)}50%{transform:rotate(3deg)}}
-@keyframes beamMove{0%,100%{transform:translateY(0)}50%{transform:translateY(38px)}}
-@keyframes armScan{from{transform:rotate(0)}to{transform:rotate(-30deg)}}
-@keyframes hop{from{transform:translateY(0)}to{transform:translateY(-18px)}}
-@keyframes cheer{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}
-@keyframes wave{from{transform:rotate(0)}to{transform:rotate(-35deg)}}
-@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
-
-/* TOOLS */
-.tools{display:grid;gap:12px;grid-template-columns:1fr;perspective:800px}
-@media(min-width:560px){.tools{grid-template-columns:1fr 1fr}}
-@media(min-width:900px){.tools{grid-template-columns:repeat(4,1fr)}}
-.tool{display:flex;flex-direction:column;gap:8px;min-width:0;transform-style:preserve-3d;transition:transform .35s ease,border-color .25s,box-shadow .35s}
-.tool:hover{transform:translateY(-6px) rotateX(4deg);border-color:var(--c);box-shadow:0 24px 40px -24px rgba(34,211,238,.6)}
-.tool:active{transform:scale(.97)}
-.tool .ico{width:44px;height:44px;border-radius:14px;background:var(--grad);display:grid;place-items:center;color:#fff;transition:transform .5s ease}
-.tool .ico svg{width:24px;height:24px}
-.tool:hover .ico-thumb{transform:scale(1.1) rotate(-6deg)}
-.tool:hover .ico-product{transform:rotateY(180deg)}
-.tool:hover .ico-content{transform:translateX(3px)}
-.tool h3{font-size:16px}
-.tool p{color:var(--muted);font-size:14px;margin:0;flex:1}
-.tag{display:inline-block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:var(--muted);width:max-content;max-width:100%}
-.tag.live{color:var(--ok);border-color:var(--ok)}
-.tb-rect{animation:pulseRect 2.4s ease-in-out infinite}
-.tb-rect.r2{animation-delay:-1.2s}
-@keyframes pulseRect{0%,100%{opacity:.5}50%{opacity:1}}
-
-/* ANALYZER */
-.analyzer{display:grid;gap:18px;align-items:center}
-@media(min-width:800px){.analyzer{grid-template-columns:1fr 1fr}}
-.frame{position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:linear-gradient(135deg,#1e1b4b,#0c4a6e 65%,#05203a);border:1px solid var(--line);box-shadow:0 20px 40px -24px rgba(34,211,238,.5)}
-.frame .clip{position:absolute;left:12%;right:12%;top:18%;bottom:30%;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);animation:clipFloat 4s ease-in-out infinite}
-.frame .play{position:absolute;left:50%;top:48%;width:34px;height:34px;margin:-17px 0 0 -12px;border-radius:50%;background:var(--grad);display:grid;place-items:center;color:#fff;font-size:12px}
-.frame .scan{position:absolute;left:0;right:0;height:2px;background:var(--c);box-shadow:0 0 14px var(--c);animation:sweep 2.6s linear infinite}
-.tline{position:absolute;left:8%;right:8%;bottom:10%;height:14%;display:flex;gap:4px;align-items:flex-end}
-.tline span{flex:1;background:var(--grad);border-radius:3px;animation:bars 1.8s ease-in-out infinite}
-.tline span:nth-child(2n){animation-delay:-.6s}
-.tline span:nth-child(3n){animation-delay:-1.1s}
-@keyframes sweep{0%{top:0}100%{top:100%}}
-@keyframes clipFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-@keyframes bars{0%,100%{height:30%}50%{height:95%}}
-.meter{display:grid;gap:10px;margin-top:8px}
-.meter div{font-size:13px;color:var(--muted)}
-.mbar{height:6px;border-radius:6px;background:var(--line);overflow:hidden;margin-top:4px}
-.mbar span{display:block;height:100%;background:var(--grad);border-radius:6px}
-
-/* CREATE */
-.create-grid{display:grid;gap:18px}
-@media(min-width:900px){.create-grid{grid-template-columns:1.1fr .9fr;align-items:start}}
-.create-grid>*{min-width:0}
-label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin:12px 0 6px}
-select,textarea{width:100%;min-height:46px;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--in);transition:border-color .2s,box-shadow .2s}
-select:focus,textarea:focus{outline:none;border-color:var(--v);box-shadow:0 0 0 4px rgba(139,92,246,.22)}
-textarea{min-height:130px;resize:vertical;font-size:16px}
-input[type=checkbox]{accent-color:var(--v);width:18px;height:18px}
-.grid2{display:grid;grid-template-columns:1fr;gap:0 12px}
-@media(min-width:560px){.grid2{grid-template-columns:1fr 1fr}}
-.check{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--in);margin-top:8px;cursor:pointer;font-weight:600;font-size:14px}
-.check small{display:block;color:var(--muted);font-weight:400}
-.warnbox{border:1px solid var(--warn);border-radius:12px;padding:12px;margin-top:14px;background:var(--card);font-size:14px}
-.warnbox .check{border:0;background:none;padding:0}
-.notice{margin-top:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:14px}
-.notice.err{border-color:var(--danger);color:var(--danger)}
-.notice.ok{border-color:var(--ok)}
-.hint{font-size:12px;color:var(--muted);margin-top:6px}
-
-/* PROCESSING PANEL */
-.proc{margin-top:14px;padding:14px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,var(--card),transparent)}
-.proc-stage{position:relative;height:190px;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 50% 40%,rgba(139,92,246,.3),transparent 65%),var(--in);border:1px solid var(--line);display:grid;place-items:center}
-.proc-stage .mascot-wrap{max-width:110px;z-index:2}
-.scanbeam{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--c),transparent);box-shadow:0 0 12px var(--c);animation:sweep 2.2s linear infinite;z-index:1}
-.pcard{position:absolute;padding:6px 10px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:12px;font-weight:600;animation:floaty 4s ease-in-out infinite;z-index:1}
-.pc1{top:8%;left:5%}.pc2{top:12%;right:5%;animation-delay:-1.4s}.pc3{bottom:8%;left:14%;animation-delay:-2.6s}
-.proc-top{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:12px}
-.proc-stages{display:grid;gap:6px;margin:12px 0 0;padding:0;font-size:14px}
-.proc-stages li{list-style:none;color:var(--muted);display:flex;gap:8px;align-items:center}
-.proc-stages li::before{content:"○";color:var(--muted)}
-.proc-stages li.done{color:var(--text)}
-.proc-stages li.done::before{content:"●";color:var(--ok)}
-.proc-stages li.active{color:var(--text);font-weight:700}
-.proc-stages li.active::before{content:"◉";color:var(--c);animation:twinkle 1.2s ease-in-out infinite}
-.bar{height:7px;border-radius:7px;background:var(--line);overflow:hidden;position:relative;margin-top:12px}
-.bar::after{content:"";position:absolute;top:0;bottom:0;width:35%;background:var(--grad);border-radius:7px;box-shadow:0 0 12px var(--c);animation:slide 1.6s ease-in-out infinite}
-.bar.done::after{animation:none;left:0;width:100%}
-.bar.stop::after{animation:none;width:0}
-@keyframes slide{0%{left:-35%}100%{left:100%}}
-video.result{width:100%;border-radius:14px;margin-top:10px;background:#000}
-
-/* BENEFITS & PRICING */
-.cards3{display:grid;gap:14px;grid-template-columns:1fr}
-@media(min-width:760px){.cards3{grid-template-columns:repeat(3,1fr)}}
-.cards3>*{min-width:0}
-.lift{transition:transform .3s ease,border-color .25s}
-.lift:hover{transform:translateY(-4px);border-color:var(--v)}
-.benefit h3,.plan h3{font-size:16px;margin-bottom:6px}
-.benefit .bi{width:40px;height:40px;border-radius:12px;background:var(--grad);display:grid;place-items:center;color:#fff;margin-bottom:10px}
-.benefit .bi svg{width:22px;height:22px}
-.plan ul{margin:8px 0 0;padding-left:18px;color:var(--muted);font-size:14px}
-.plan .price{font-size:24px;font-weight:800;margin:6px 0}
-
-/* FOOTER */
-footer{border-top:1px solid var(--line);margin-top:34px;padding:26px 16px 42px;color:var(--muted);font-size:13px;text-align:center}
-.foot-links{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-bottom:10px}
-.foot-links a{color:var(--muted);text-decoration:none}
-.foot-links a:hover{color:var(--text)}
-
-/* TOAST */
-.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,240%);background:var(--panel);border:1px solid var(--line);padding:12px 16px;border-radius:12px;max-width:92%;transition:transform .3s ease;z-index:60;font-size:14px}
-.toast.show{transform:translate(-50%,0)}
-
-/* REDUCED MOTION */
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.reveal{opacity:1;transform:none}}
-html.no-motion *,html.no-motion *::before,html.no-motion *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
-html.no-motion .reveal{opacity:1;transform:none}
-html.no-motion .mascot-wrap{transform:none!important}
+:root{--bg:#12070C;--bg2:#1D0B13;--card:#28111C;--surf:#34152A;--text:#FFF7FA;--muted:#C5AFB8;--line:rgba(240,169,189,.18);--acc:#A52D50;--gold:#D9A38C;--grad:linear-gradient(135deg,#641A32,#A52D50);--side:#1D0B13;--shadow:0 16px 32px -20px rgba(0,0,0,.8);--ok:#7BD9A6;--err:#FF9AB2;--warn:#F2C58A;--focus:#F0A9BD;--nav:rgba(29,11,19,.96);--hero:linear-gradient(135deg,#3A1424,#28111C);color-scheme:dark}
+:root[data-theme="light"]{--bg:#FFF7EF;--bg2:#FFFCF8;--card:#FFFCF8;--surf:#F8D7C8;--text:#30252A;--muted:#6E5A62;--line:rgba(128,27,58,.14);--acc:#801B3A;--gold:#D7A18D;--grad:linear-gradient(135deg,#801B3A,#591126);--side:#DCEBE2;--shadow:0 14px 28px -18px rgba(89,17,38,.35),inset 0 1px 0 #fff;--ok:#1E7A4C;--err:#A3173D;--warn:#8A5A00;--focus:#801B3A;--nav:rgba(255,252,248,.97);--hero:linear-gradient(135deg,#F8D7C8,#F2D5DE);color-scheme:light}
+[hidden]{display:none!important}*{box-sizing:border-box}html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.45;min-height:100vh;overflow-x:hidden}
+button,input,select,textarea{font:inherit;color:inherit}h1,h2,h3{margin:0;line-height:1.2}h1{font-size:24px}h2{font-size:19px}h3{font-size:16px}p{margin:6px 0;overflow-wrap:anywhere}a{color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}.muted{color:var(--muted)}.small{font-size:13px;color:var(--muted)}.mt{margin-top:12px}.gt{color:var(--acc)}.ok{color:var(--ok)}.err{color:var(--err)}
+.app{max-width:1200px;margin:0 auto;padding:0 14px calc(92px + env(safe-area-inset-bottom))}.sidebar{display:none}.main{min-width:0}
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 -14px;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}.brand-text b{display:block;font-size:16px}.brand-text small{display:block;font-size:11px;color:var(--muted)}
+.logo{width:40px;height:40px;border-radius:14px;flex:none;display:grid;place-items:center;background:var(--grad);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 18px -10px rgba(128,27,58,.8)}
+.logo-mark{width:20px;height:20px;fill:#FFF7FA;stroke:none}
+.theme-btn{display:inline-flex;align-items:center;gap:6px;min-height:42px;padding:8px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-weight:700;font-size:13px;cursor:pointer;box-shadow:var(--shadow)}
+svg.ui,.theme-btn svg,.nav-item svg,.bottom svg,.btn svg,.back svg,.search svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.view{padding:14px 0 0}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:40;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:var(--nav);border-top:1px solid var(--line)}
+.bottom a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;border-radius:14px;text-decoration:none;font-size:12px;font-weight:700;color:var(--muted)}
+.bottom a[aria-current="page"]{color:var(--acc);background:var(--surf)}.foot{padding:18px 0 4px;text-align:center;font-size:12px;color:var(--muted)}
+@media(min-width:960px){.app{display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px;padding:0 22px 40px}.sidebar{display:flex;flex-direction:column;gap:14px;position:sticky;top:0;align-self:start;height:100vh;padding:20px 14px;background:var(--side);border-right:1px solid var(--line);border-radius:0 26px 26px 0}.topbar{margin:0;padding:14px 0;border:0;background:transparent}.brand-mobile{display:none}.bottom{display:none}.view{padding-top:18px}}
+.side-nav{display:grid;gap:6px;margin-top:18px}.nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:14px;text-decoration:none;font-weight:700;color:var(--muted)}.nav-item:hover{background:var(--card);color:var(--text)}.nav-item[aria-current="page"]{background:var(--card);color:var(--acc);box-shadow:var(--shadow)}
+.side-card{margin-top:auto;padding:14px;border-radius:20px;background:var(--card);box-shadow:var(--shadow)}.side-card p{font-size:13px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);min-width:0}.panel{padding:16px;margin-bottom:12px}
+.hero{padding:22px;margin-bottom:14px;background:var(--hero)}.hero h1{font-size:clamp(24px,6.5vw,34px);letter-spacing:-.02em}
+.eyebrow{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--acc);border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin-bottom:10px;background:var(--card)}
+.page-head{margin:4px 2px 12px}.page-head p{color:var(--muted)}
+.search{position:relative;margin:10px 0}.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}.search input{padding-left:44px;border-radius:18px}
+.sect{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px}.more{color:var(--acc);font-weight:700;font-size:14px;text-decoration:none;min-height:36px;display:inline-flex;align-items:center}
+.chipbar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}.fchip{min-height:40px;padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-weight:700;font-size:14px;cursor:pointer}.fchip[aria-pressed="true"]{background:var(--acc);color:#FFF7FA;border-color:transparent}
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}@media(min-width:720px){.tiles{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(min-width:1100px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tile{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:14px;text-decoration:none;transition:transform .2s ease}.tile:hover{transform:translateY(-3px)}.tile:active{transform:scale(.97)}.tile strong{font-size:15px;line-height:1.25}
+.featured{display:grid;gap:12px;grid-template-columns:1fr}@media(min-width:620px){.featured{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.feat{display:flex;align-items:center;gap:14px;padding:14px;text-decoration:none;transition:transform .2s ease}.feat:hover{transform:translateY(-2px)}.feat-txt{display:grid;gap:4px;min-width:0}
+.ico{position:relative;width:52px;height:52px;border-radius:18px;flex:none;display:grid;place-items:center;color:#FFF7FA;background:linear-gradient(155deg,var(--c1,#A52D50),var(--c2,#641A32));box-shadow:inset 0 2px 0 rgba(255,255,255,.4),inset 0 -8px 12px rgba(0,0,0,.22),0 12px 20px -10px rgba(0,0,0,.45)}
+.ico::after{content:"";position:absolute;left:14%;top:7%;width:46%;height:28%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0));pointer-events:none}
+.ico svg{position:relative;z-index:1;width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.t-burg{--c1:#A52D50;--c2:#641A32}.t-mint{--c1:#8FC7A8;--c2:#3F7A5E;color:#10301F}.t-peach{--c1:#F5C2A8;--c2:#C9856A;color:#4A2118}.t-blue{--c1:#A9C6E0;--c2:#4D7FA8}.t-rose{--c1:#F0A9BD;--c2:#A8405E}
+.badge{display:inline-flex;align-items:center;width:max-content;max-width:100%;font-size:10px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);background:var(--surf);color:var(--muted)}
+.b-ok{color:var(--ok);border-color:var(--ok)}.b-tpl{color:var(--gold);border-color:var(--gold)}.b-need{color:var(--warn);border-color:var(--warn)}.b-user{color:var(--acc);border-color:var(--acc)}
+.empty{padding:18px;border-radius:18px;border:1.5px dashed var(--line);color:var(--muted);display:grid;gap:8px;justify-items:start}.empty strong{color:var(--text)}
+.tool-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:2px 0 12px}.tool-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.tool-title h1{font-size:22px}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:42px;padding:8px 14px 8px 8px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}
+label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:0 0 6px}.field{margin-top:12px}
+input,select,textarea{width:100%;min-height:46px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font-size:16px}textarea{min-height:110px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 4px rgba(128,27,58,.14)}
+input[type=checkbox]{width:20px;height:20px;min-height:0;padding:0;accent-color:var(--acc);flex:none}input[type=color]{padding:4px;height:46px;cursor:pointer}input[type=range]{min-height:32px;padding:0;accent-color:var(--acc)}
+.grid2{display:grid;gap:0 12px;grid-template-columns:minmax(0,1fr)}@media(min-width:600px){.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}.row.tight{margin-top:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 16px;border:0;border-radius:16px;background:var(--grad);color:#FFF7FA;font-weight:700;font-size:15px;cursor:pointer;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 18px -12px rgba(128,27,58,.9);transition:transform .15s ease}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:none}.btn.danger{background:transparent;color:var(--err);border:1px solid var(--err);box-shadow:none}.btn.sm{min-height:40px;padding:8px 12px;font-size:14px;border-radius:14px}
+.notice{margin-top:12px;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:var(--surf);font-size:14px}.notice.err{color:var(--err);border-color:var(--err)}.notice.ok{color:var(--ok);border-color:var(--ok)}
+.list{display:grid;gap:8px;margin:10px 0 0;padding:0;list-style:none}.list>li,.list>.item,.list>a{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 14px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);color:var(--text);text-decoration:none;min-width:0;overflow-wrap:anywhere}
+.list>li>div:first-child,.list>.item>div:first-child{flex:1 1 200px;min-width:0}.list>a{flex-direction:column;align-items:flex-start}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:6px 6px 6px 12px;border-radius:999px;background:var(--surf);border:1px solid var(--line);font-size:14px;overflow-wrap:anywhere}.chip.warn{border-color:var(--warn)}.chip button{border:0;background:none;color:var(--acc);cursor:pointer;font-size:18px;min-width:32px;min-height:32px}
+.counter{font-size:12px;color:var(--muted);text-align:right;margin-top:6px}.over{color:var(--err)!important}
+.thumb-grid{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}@media(min-width:820px){.thumb-grid{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:start}}
+#thCanvas{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:18px;background:#000;box-shadow:var(--shadow)}
+.checklist{display:grid;gap:6px;margin-top:8px}.checklist label{display:flex;align-items:center;gap:10px;margin:0;padding:10px 12px;border-radius:16px;background:var(--surf);color:var(--text);font-size:15px;font-weight:600;cursor:pointer}
+.task{display:flex;align-items:center;gap:12px}.task label{flex:1;min-width:0;margin:0;display:flex;gap:10px;align-items:center;color:var(--text)}.task.done span{text-decoration:line-through;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,220%);max-width:92%;background:var(--bg2);border:1px solid var(--line);padding:12px 16px;border-radius:16px;box-shadow:var(--shadow);z-index:60;font-size:14px;transition:transform .25s ease}.toast.show{transform:translate(-50%,0)}.toast.err{color:var(--err);border-color:var(--err)}
+@media(min-width:960px){.toast{bottom:24px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+html.no-motion *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 </style>
 </head>
 <body>
 
-<header class="top">
-  <div class="top-in">
-    <a class="brand" href="#home" aria-label="MotionMind AI home">
-      <svg viewBox="0 0 48 48" aria-hidden="true">
-        <defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs>
-        <rect width="48" height="48" rx="13" fill="url(#lg)"/>
-        <path d="M8 17 Q11 24 8 31" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".5"/>
-        <path d="M13 13 Q17 24 13 35" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".8"/>
-        <path d="M21 14 L36 24 L21 34 Z" fill="#fff"/>
-      </svg>
-      <div><strong>MotionMind AI</strong><small>AI Creator Studio</small></div>
-    </a>
-    <nav class="nav" aria-label="Main">
-      <a href="#tools">Tools</a>
-      <a href="#analyzer">Analyzer</a>
-      <a href="#create">Create Video</a>
-      <a href="#benefits">Benefits</a>
-      <a href="#pricing">Pricing</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-logo" viewBox="0 0 24 24"><path d="M8 6.5v11L17.5 12z"/><rect x="3" y="5" width="2" height="14" rx="1"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v8.5a1.5 1.5 0 0 1-1.5 1.5H15v-6H9v6H4.5A1.5 1.5 0 0 1 3 19.5z"/></symbol>
+  <symbol id="i-tools" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 0 1 4.5 5H9l2 2.5h8.5A1.5 1.5 0 0 1 21 9v9.5a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18.5z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.8.7 1 1.5 1 2.5h6c0-1 .2-1.8 1-2.5A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8M15 7h6v6"/></symbol>
+  <symbol id="i-thumb" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 12V3h9l9 9-9 9z"/><circle cx="7.5" cy="7.5" r="1"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></symbol>
+  <symbol id="i-audit" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4h6v3H9zM9 13l2 2 4-4"/></symbol>
+  <symbol id="i-compete" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-hook" viewBox="0 0 24 24"><path d="M12 3v12a4 4 0 1 1-4-4M12 3c3 0 5 2 5 5"/></symbol>
+  <symbol id="i-growth" viewBox="0 0 24 24"><path d="M3 20h18M6 16l4-4 3 3 5-6M15 7h4v4"/></symbol>
+</svg>
+
+<div class="app">
+  <aside class="sidebar" aria-label="Main navigation">
+    <a class="brand" href="#/" aria-label="MotionMind AI home"><span class="logo" aria-hidden="true"><svg class="logo-mark" viewBox="0 0 24 24"><use href="#i-logo"/></svg></span><span class="brand-text"><b>MotionMind AI</b><small>Creator Toolkit</small></span></a>
+    <nav class="side-nav" aria-label="Sections">
+      <a class="nav-item" href="#/" data-nav="home"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a>
+      <a class="nav-item" href="#/tools" data-nav="tools"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-tools"/></svg><span>All tools</span></a>
+      <a class="nav-item" href="#/projects" data-nav="projects"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-folder"/></svg><span>Saved projects</span></a>
+      <a class="nav-item" href="#/settings" data-nav="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg><span>Settings</span></a>
     </nav>
-    <div class="top-actions">
-      <button id="motionBtn" class="btn ghost sm" type="button" aria-pressed="false"><span class="lbl-l">Reduce motion</span><span class="lbl-s">Motion</span></button>
-      <button id="themeBtn" class="btn ghost sm" type="button"><span class="lbl-l">Light mode</span><span class="lbl-s">Light</span></button>
-      <button id="menuBtn" class="btn ghost sm menu-btn" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">☰</button>
-    </div>
+    <div class="side-card"><strong>Early access</strong><p>Your saved work stays on this device. No live YouTube data is connected yet.</p></div>
+  </aside>
+  <div class="main">
+    <header class="topbar">
+      <a class="brand brand-mobile" href="#/" aria-label="MotionMind AI home"><span class="logo" aria-hidden="true"><svg class="logo-mark" viewBox="0 0 24 24"><use href="#i-logo"/></svg></span><span class="brand-text"><b>MotionMind AI</b><small>Creator Toolkit</small></span></a>
+      <button id="themeBtn" class="theme-btn" type="button" aria-label="Switch to dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><use id="themeUse" href="#i-moon"/></svg><span id="themeLbl">Dark</span></button>
+    </header>
+    <main id="view" class="view" tabindex="-1"><noscript><p class="notice err">This toolkit needs JavaScript to run. Please enable it in your browser.</p></noscript></main>
+    <footer class="foot">MotionMind AI · Early access · No live YouTube data is connected. Tools labelled Needs API show no results.</footer>
   </div>
-  <nav id="mobileNav" class="mobile-nav" aria-label="Mobile">
-    <a href="#tools">Tools</a>
-    <a href="#analyzer">Analyzer</a>
-    <a href="#create">Create Video</a>
-    <a href="#benefits">Benefits</a>
-    <a href="#pricing">Pricing</a>
-  </nav>
-</header>
+</div>
 
-<main class="wrap">
-
-  <!-- HERO -->
-  <section id="home" class="hero" aria-labelledby="heroTitle">
-    <div>
-      <span class="pill enter" id="apiStatus" role="status" aria-live="polite">Checking server…</span>
-      <h1 id="heroTitle" class="enter enter-2" style="margin-top:14px">Create. Analyze. <span class="grad">Grow Faster.</span></h1>
-      <p class="sub enter enter-3">Turn ideas into thumbnails, scripts, product visuals and video clips in one studio. Video generation is connected to our server. Other tools are being built.</p>
-      <div class="cta enter enter-4">
-        <a class="btn lg" href="#create">Create Video</a>
-        <a class="btn ghost lg" href="#tools">Explore Tools</a>
-        <button id="checkBtn" class="btn ghost lg" type="button">Check server (free)</button>
-      </div>
-      <p class="small enter enter-4" style="margin-top:12px">Video generation may use paid credits on the server account. Checking the server is free and generates nothing.</p>
-    </div>
-
-    <div class="hero-stage enter enter-2" id="heroStage">
-      <span class="spark" style="top:18%;left:44%;animation-delay:0s" aria-hidden="true"></span>
-      <span class="spark" style="top:62%;left:18%;animation-delay:1s" aria-hidden="true"></span>
-      <span class="spark" style="top:34%;left:82%;animation-delay:2s" aria-hidden="true"></span>
-      <span class="spark" style="top:78%;left:66%;animation-delay:.5s" aria-hidden="true"></span>
-      <span class="spark" style="top:12%;left:70%;animation-delay:1.5s" aria-hidden="true"></span>
-      <span class="fx fx1" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#22d3ee" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M8 5l3 4M13 5l3 4"/></svg>Clapperboard</span>
-      <span class="fx fx2" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Image card</span>
-      <span class="fx fx3" aria-hidden="true"><svg viewBox="0 0 24 24" fill="#22d3ee"><path d="M8 5v14l11-7z"/></svg>Video frame</span>
-      <span class="fx fx4" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M4 18V6M10 18V10M16 18V4M22 18H2"/></svg>Insights</span>
-      <div id="mascot" class="mascot-wrap mascot" role="button" tabindex="0" aria-label="MotionMind robot mascot. Press Enter to wave." title="Tap me"></div>
-    </div>
-  </section>
-
-  <!-- TOOLS -->
-  <section id="tools" class="reveal" aria-labelledby="toolsTitle">
-    <h2 id="toolsTitle" style="font-size:24px">Creator tools</h2>
-    <p class="small">Only Create Video is connected to the server today. The other tools show their status honestly.</p>
-    <div class="tools" style="margin-top:12px">
-      <article class="glass tool">
-        <div class="ico ico-thumb" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><rect class="tb-rect" x="6" y="12" width="5" height="5" fill="#fff" stroke="none"/><rect class="tb-rect r2" x="13" y="12" width="5" height="5" fill="#fff" stroke="none"/></svg></div>
-        <h3>AI Thumbnail Studio</h3>
-        <p>Design eye-catching thumbnails for your videos.</p>
-        <span class="tag">Not connected</span>
-        <button class="btn ghost sm soon" type="button">Status</button>
-      </article>
-      <article class="glass tool">
-        <div class="ico ico-content" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
-        <h3>Content Generator</h3>
-        <p>Draft scripts, captions and hooks from a short idea.</p>
-        <span class="tag">Not connected</span>
-        <button class="btn ghost sm soon" type="button">Status</button>
-      </article>
-      <article class="glass tool">
-        <div class="ico ico-product" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg></div>
-        <h3>Product Image Studio</h3>
-        <p>Create clean product visuals for listings and ads.</p>
-        <span class="tag">Not connected</span>
-        <button class="btn ghost sm soon" type="button">Status</button>
-      </article>
-      <article class="glass tool">
-        <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></div>
-        <h3>AI Video Analyzer</h3>
-        <p>Review a video's pacing, hooks and structure.</p>
-        <span class="tag">Not connected</span>
-        <button class="btn ghost sm soon" type="button">Status</button>
-      </article>
-    </div>
-  </section>
-
-  <!-- ANALYZER PREVIEW -->
-  <section id="analyzer" class="glass reveal" aria-labelledby="anaTitle">
-    <h2 id="anaTitle" style="font-size:22px">AI Video Analyzer <span class="tag">Preview only</span></h2>
-    <div class="analyzer" style="margin-top:14px">
-      <div class="frame" aria-hidden="true">
-        <div class="clip"></div>
-        <div class="play">▶</div>
-        <div class="tline"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-        <span class="scan"></span>
-      </div>
-      <div>
-        <p class="muted">This animation shows how the analyzer will look. It does not analyze any video yet.</p>
-        <div class="meter">
-          <div>Hook strength (sample)<div class="mbar"><span style="width:72%"></span></div></div>
-          <div>Pacing (sample)<div class="mbar"><span style="width:58%"></span></div></div>
-          <div>Clarity (sample)<div class="mbar"><span style="width:81%"></span></div></div>
-        </div>
-        <p class="small" style="margin-top:10px">Sample numbers are for layout only, not real results.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- CREATE VIDEO (WORKING) -->
-  <section id="create" class="glass reveal" aria-labelledby="createH">
-    <h2 id="createH" style="font-size:22px">Create video <span class="tag live">Connected</span></h2>
-    <p class="small">Uses your MotionMind server. Only the prompt is sent right now.</p>
-
-    <div class="create-grid" style="margin-top:12px">
-      <form id="genForm" novalidate>
-        <label for="prompt">Describe your video</label>
-        <textarea id="prompt" maxlength="600" placeholder="e.g. A cinematic bike ride through mountain roads at sunset"></textarea>
-        <div class="hint"><span id="charCount">0 / 600</span></div>
-
-        <div class="grid2" style="margin-top:6px">
-          <div><label for="style">Style (not sent yet)</label>
-            <select id="style">
-              <option value="cinematic">Cinematic</option>
-              <option value="3d">3D Animation</option>
-              <option value="realistic">Realistic</option>
-              <option value="cartoon">Cartoon</option>
-              <option value="anime">Anime</option>
-              <option value="motion">Motion Graphics</option>
-              <option value="product">Product Advertisement</option>
-              <option value="fantasy">Fantasy / Sci-Fi</option>
-            </select></div>
-          <div><label for="duration">Duration (not sent yet)</label>
-            <select id="duration">
-              <option value="10">10 seconds</option>
-              <option value="15">15 seconds</option>
-              <option value="30" selected>30 seconds</option>
-              <option value="60">1 minute</option>
-            </select></div>
-          <div><label for="aspect">Aspect ratio (not sent yet)</label>
-            <select id="aspect">
-              <option value="9:16">9:16 Vertical</option>
-              <option value="16:9" selected>16:9 Landscape</option>
-              <option value="1:1">1:1 Square</option>
-            </select></div>
-          <div><label for="quality">Quality (not sent yet)</label>
-            <select id="quality">
-              <option value="standard">Standard</option>
-              <option value="hd">HD</option>
-            </select></div>
-        </div>
-
-        <label class="check"><input type="checkbox" id="subtitles" checked><span>Subtitles<small>Not sent yet</small></span></label>
-
-        <div class="warnbox">
-          <strong>⚠ Possible cost</strong>
-          <p class="small" style="margin:6px 0">Each generation may use paid credits on the server account. Check server is free and does not generate anything.</p>
-          <label class="check"><input type="checkbox" id="costAck"><span>I understand this may cost money and I want to generate now.</span></label>
-        </div>
-
-        <div style="margin-top:14px">
-          <button id="genBtn" class="btn lg block" type="submit" disabled>Generate video</button>
-        </div>
-      </form>
-
-      <div>
-        <div class="proc" id="proc" hidden aria-live="polite">
-          <div class="proc-stage" aria-hidden="true">
-            <span class="scanbeam"></span>
-            <span class="pcard pc1">🎬 Clip</span>
-            <span class="pcard pc2">🖼 Frame</span>
-            <span class="pcard pc3">✨ Effects</span>
-            <span class="spark" style="top:20%;left:20%"></span>
-            <span class="spark" style="top:70%;left:80%;animation-delay:1s"></span>
-            <span class="spark" style="top:40%;left:85%;animation-delay:.5s"></span>
-            <div id="procMascot" class="mascot-wrap mascot sm"></div>
-          </div>
-          <div class="proc-top">
-            <div style="flex:1;min-width:150px"><strong id="procTitle">Working…</strong><div class="small" id="procNote">Keep this page open.</div></div>
-            <button id="stopBtn" class="btn ghost sm" type="button">Stop checking</button>
-          </div>
-          <ol class="proc-stages" id="procStages">
-            <li data-stage="0">Understanding your prompt <span class="small">(estimated)</span></li>
-            <li data-stage="1">Creating your video <span class="small">(estimated)</span></li>
-            <li data-stage="2">Finishing <span class="small">(estimated)</span></li>
-          </ol>
-          <div class="bar" id="procBar"></div>
-          <p class="small" id="elapsed" style="margin-top:8px"></p>
-        </div>
-
-        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
-
-        <div id="result" hidden>
-          <h3 style="margin-top:14px;font-size:17px">Your video</h3>
-          <video id="vid" class="result" controls playsinline></video>
-          <div class="row" style="margin-top:10px">
-            <a id="dl" class="btn sm" href="#" target="_blank" rel="noopener">Open / download video</a>
-          </div>
-          <p class="hint">If the download does not start, long-press the button and choose Download or Save link.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- BENEFITS -->
-  <section id="benefits" class="reveal" aria-labelledby="benTitle">
-    <h2 id="benTitle" style="font-size:24px">Why creators use MotionMind</h2>
-    <div class="cards3" style="margin-top:12px">
-      <article class="glass benefit lift">
-        <div class="bi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <h3>Start from one idea</h3><p class="muted">Write one sentence and get a video draft without switching tools.</p>
-      </article>
-      <article class="glass benefit lift">
-        <div class="bi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M5 12l4 4 10-10"/></svg></div>
-        <h3>Honest status</h3><p class="muted">You see the real server response, real errors and real results. No fake completions.</p>
-      </article>
-      <article class="glass benefit lift">
-        <div class="bi" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></div>
-        <h3>Your keys stay private</h3><p class="muted">Your prompt is sent only when you press Generate. API keys stay on the server.</p>
-      </article>
-    </div>
-  </section>
-
-  <!-- PRICING -->
-  <section id="pricing" class="reveal" aria-labelledby="priceTitle">
-    <h2 id="priceTitle" style="font-size:24px">Pricing</h2>
-    <p class="small">Prices are not set yet. No payment is taken on this page.</p>
-    <div class="cards3" style="margin-top:12px">
-      <article class="glass plan lift">
-        <h3>Free preview</h3>
-        <div class="price">Not set</div>
-        <ul><li>Server check</li><li>Storyboard and tool previews</li><li>Video generation depends on server credits</li></ul>
-      </article>
-      <article class="glass plan lift">
-        <h3>Creator</h3>
-        <div class="price">Not set</div>
-        <ul><li>Planned for a future release</li><li>Limits will be listed before launch</li></ul>
-      </article>
-      <article class="glass plan lift">
-        <h3>Studio</h3>
-        <div class="price">Not set</div>
-        <ul><li>Planned for a future release</li><li>Limits will be listed before launch</li></ul>
-      </article>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <div class="foot-links">
-    <a href="#home">Home</a><a href="#tools">Tools</a><a href="#create">Create Video</a><a href="#pricing">Pricing</a>
-  </div>
-  <div>MotionMind AI · Early access · Your prompt is sent to the server only when you generate.</div>
-</footer>
-
+<nav class="bottom" aria-label="Mobile navigation">
+  <a href="#/" data-nav="home"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-home"/></svg><span>Home</span></a>
+  <a href="#/tools" data-nav="tools"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-tools"/></svg><span>Tools</span></a>
+  <a href="#/projects" data-nav="projects"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-folder"/></svg><span>Projects</span></a>
+  <a href="#/settings" data-nav="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-gear"/></svg><span>Settings</span></a>
+</nav>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
-const API_BASE = "https://motionmind-backend.onrender.com";
-const POLL_MS = 4000;
-const MAX_POLL_MS = 15 * 60 * 1000;
-const MAX_PROMPT = 600;
-const THEME_KEY = "mm-theme-v3";
-const MOTION_KEY = "mm-motion-v3";
-const MOODS = ["thinking", "scanning", "celebrate", "sad", "wave"];
-const ID_RE = /^[A-Za-z0-9_-]{1,120}$/;
+(function () {
+  "use strict";
+  var KEY = "mm-studio-v4", TK = "mm-theme", MK = "mm-motion", SVG = "http://www.w3.org/2000/svg";
+  var LANGS = ["English", "Spanish", "French", "German", "Portuguese", "Hindi", "Japanese"];
+  var DURS = [[30, "30 seconds"], [60, "1 minute"], [120, "2 minutes"], [300, "5 minutes"], [600, "10 minutes"]];
+  var FMTS = [["shorts", "YouTube Shorts (vertical)"], ["long", "Long-form video"]];
+  var LAY = [["left", "Text left"], ["center", "Centred"], ["bar", "Bottom bar"]];
+  var FREQ = ["Weekly", "2–3 per month", "Monthly", "Irregular"];
+  var CATS = [["all", "All"], ["create", "Create"], ["seo", "Thumbnails & SEO"], ["research", "Research"], ["plan", "Planning"]];
+  var TYPE = { thumb: "Thumbnail design", idea: "Idea list", script: "Hook & script", title: "Title & description" };
+  var BADGE = { ok: "b-ok", tpl: "b-tpl", api: "b-need", user: "b-user" };
+  var TOOLS = [
+    { id: "ideas", name: "Video Idea Generator", short: "Idea Generator", cat: "create", icon: "i-bulb", tone: "t-mint", featured: true, st: ["tpl", "Template · not AI"], desc: "Structured video ideas from your niche and audience." },
+    { id: "trends", name: "Trending Topics", short: "Trending Topics", cat: "research", icon: "i-trend", tone: "t-blue", featured: false, st: ["api", "Needs API"], desc: "Log topics you see yourself. Live trends need a YouTube API." },
+    { id: "thumbs", name: "AI Thumbnail Maker", short: "Thumbnail Maker", cat: "seo", icon: "i-thumb", tone: "t-peach", featured: true, st: ["ok", "Works now"], desc: "Design a 16:9 thumbnail and download a PNG." },
+    { id: "analyzer", name: "Video Analyzer", short: "Video Analyzer", cat: "research", icon: "i-eye", tone: "t-rose", featured: false, st: ["api", "Needs API"], desc: "Checks a YouTube link. Analysis needs a connected API." },
+    { id: "seo", name: "SEO Keywords & Tags", short: "SEO Tags", cat: "seo", icon: "i-tag", tone: "t-mint", featured: true, st: ["ok", "Works now"], desc: "Clean, de-duplicate and organise your keywords." },
+    { id: "titles", name: "Title & Description", short: "Titles", cat: "create", icon: "i-pen", tone: "t-peach", featured: false, st: ["tpl", "Template · not AI"], desc: "Editable title and description templates." },
+    { id: "audit", name: "Channel Audit", short: "Channel Audit", cat: "research", icon: "i-audit", tone: "t-blue", featured: false, st: ["api", "Needs API"], desc: "Your checklist. Public channel data needs a YouTube API." },
+    { id: "compete", name: "Competitor Research", short: "Competitors", cat: "research", icon: "i-compete", tone: "t-rose", featured: false, st: ["user", "Your entries"], desc: "Track competitors you research yourself." },
+    { id: "hooks", name: "Hook & Script Lab", short: "Hook & Script", cat: "create", icon: "i-hook", tone: "t-blue", featured: true, st: ["tpl", "Template · not AI"], desc: "Hook options and a timed script outline." },
+    { id: "growth", name: "Creator Growth Planner", short: "Growth Planner", cat: "plan", icon: "i-growth", tone: "t-mint", featured: false, st: ["ok", "Saved on device"], desc: "Create, tick off and delete planning tasks." },
+    { id: "projects", name: "Saved Projects", short: "Saved Projects", cat: "plan", icon: "i-folder", tone: "t-peach", featured: false, st: ["ok", "Saved on device"], desc: "Reopen, rename, export or delete your saved work." }
+  ];
+  var BY = {};
+  TOOLS.forEach(function (t) { BY[t.id] = t; t.href = t.id === "projects" ? "#/projects" : "#/tool/" + t.id; });
+  var IDEA_T = ["5 mistakes beginners make with {k} (and how to fix them)", "I tried {k} for 7 days: honest results", "Beginner's guide to {k} in {n}", "The truth about {k} for {a}", "{k} step by step for {a}", "Myths about {k} that waste time", "Before and after: {k} in {n}", "Answering the top questions about {k}"];
+  var TITLE_T = ["{k} for {a}: what actually works", "How to {k} in {n} (beginner friendly)", "{k} explained in {d}", "I tested {k} so you do not have to", "Stop doing this with {k}"];
+  var DESC_T = "In this video I cover {k} for {a}.\n\nWhat you will learn:\n- \n- \n\nTimestamps:\n00:00 Intro\n\nKeywords: {k}";
+  var HOOK_T = ["Most people get {k} wrong. Here is the fix.", "In the next {d}, you will learn {k} without the jargon.", "If you are {a} and want results with {k}, watch this first."];
+  var PARTS = [["Hook", 8, "Say the promise about {k} in one sentence."], ["Problem", 12, "Describe the problem {a} face with {k}."], ["Point 1", 20, "One practical step about {k}."], ["Point 2", 20, "A second step, with one example."], ["Point 3", 20, "A third step or a common mistake to avoid."], ["Proof or example", 10, "Show one real example you can verify."], ["Call to action", 10, "Ask one specific question or action."]];
+  var AUDIT = ["Titles say clearly what the video is about", "Thumbnails have readable text and one clear subject", "Descriptions have a summary and useful links", "Uploads follow a schedule you can keep", "Related videos are grouped in playlists", "End screens or cards point to another video"];
 
-const $ = id => document.getElementById(id);
-let busy = false;          // true from the moment POST /generate starts until the request is fully finished
-let genToken = 0;          // increases on every new generation and on every Stop; old work checks it and quits
-let postPending = false;   // true while POST /generate has not returned yet
-let panelDone = true;      // true when the processing panel shows a final result (Close button)
-let elapsedTimer = null;
-let startedAt = 0;
-let moodTimer = null;
-let motionOff = false;
+  var S = { data: load(), cat: "all", query: "", pending: null, depth: 0, back: false, motionOff: false, idea: null, hook: null, seo: "", tt: null,
+    title: { title: "", description: "", topic: "", keyword: "", audience: "" },
+    thumb: { head: "", sub: "", bg: "#801B3A", fg: "#FFF7FA", layout: "left", size: 96 } };
 
-// ---------- safe storage and environment helpers ----------
-function safeGet(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
-function safeSet(key, value) { try { localStorage.setItem(key, value); } catch (e) {} }
-function prefersReducedMotion() {
-  try { return typeof window.matchMedia === "function" && window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
-  catch (e) { return false; }
-}
-
-// Sets a button's visible text to a long label and a short label (short label shows on small phones)
-function setBtnLabel(btn, longText, shortText) {
-  btn.textContent = "";
-  const a = document.createElement("span");
-  a.className = "lbl-l";
-  a.textContent = longText;
-  const b = document.createElement("span");
-  b.className = "lbl-s";
-  b.textContent = shortText;
-  btn.append(a, b);
-}
-
-// ---------- 3D-style mascot (SVG layers, animated by CSS) ----------
-function mascotSVG(u) {
-  return `<svg viewBox="0 0 200 230" role="img" aria-hidden="true" focusable="false">
-    <defs>
-      <radialGradient id="body${u}" cx="35%" cy="25%" r="80%"><stop offset="0" stop-color="#4b3fb0"/><stop offset=".6" stop-color="#1a1f4f"/><stop offset="1" stop-color="#0a0e28"/></radialGradient>
-      <linearGradient id="rim${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
-      <linearGradient id="visor${u}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1030"/><stop offset="1" stop-color="#050818"/></linearGradient>
-      <linearGradient id="scan${u}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#22d3ee" stop-opacity="0"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#22d3ee" stop-opacity="0"/></linearGradient>
-      <radialGradient id="sh${u}"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
-      <filter id="glow${u}" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-    </defs>
-    <ellipse class="shadow" cx="100" cy="222" rx="62" ry="8" fill="url(#sh${u})"/>
-    <g class="bot-float">
-      <rect class="arm arm-l" x="22" y="134" width="22" height="56" rx="11" fill="#151b40" stroke="url(#rim${u})" stroke-width="2"/>
-      <rect class="arm arm-r" x="156" y="134" width="22" height="56" rx="11" fill="#151b40" stroke="url(#rim${u})" stroke-width="2"/>
-      <g class="head">
-        <line x1="100" y1="24" x2="100" y2="8" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
-        <circle class="glow" cx="100" cy="6" r="6" fill="#22d3ee" filter="url(#glow${u})"/>
-        <rect x="38" y="24" width="124" height="96" rx="34" fill="url(#body${u})" stroke="url(#rim${u})" stroke-width="3"/>
-        <rect x="50" y="32" width="100" height="14" rx="7" fill="#fff" opacity=".08"/>
-        <rect x="54" y="52" width="92" height="50" rx="22" fill="url(#visor${u})"/>
-        <g class="eyes-open">
-          <ellipse class="glow" cx="80" cy="77" rx="9" ry="11" fill="#22d3ee" filter="url(#glow${u})"/>
-          <ellipse class="glow" cx="120" cy="77" rx="9" ry="11" fill="#22d3ee" filter="url(#glow${u})"/>
-          <circle class="pupil" cx="80" cy="77" r="3.5" fill="#fff"/>
-          <circle class="pupil" cx="120" cy="77" r="3.5" fill="#fff"/>
-          <rect class="lid" x="68" y="64" width="24" height="26" fill="#0b1030"/>
-          <rect class="lid" x="108" y="64" width="24" height="26" fill="#0b1030"/>
-        </g>
-        <g class="eyes-happy">
-          <path d="M70 80 Q80 66 90 80" stroke="#22d3ee" stroke-width="4" fill="none" stroke-linecap="round" filter="url(#glow${u})"/>
-          <path d="M110 80 Q120 66 130 80" stroke="#22d3ee" stroke-width="4" fill="none" stroke-linecap="round" filter="url(#glow${u})"/>
-        </g>
-        <g class="eyes-sad">
-          <path d="M70 74 Q80 84 90 74" stroke="#22d3ee" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <path d="M110 74 Q120 84 130 74" stroke="#22d3ee" stroke-width="4" fill="none" stroke-linecap="round"/>
-        </g>
-        <rect class="beam" x="58" y="56" width="84" height="3" rx="1.5" fill="url(#scan${u})"/>
-        <path class="m-smile" d="M84 110 Q100 118 116 110" stroke="#22d3ee" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path class="m-flat" d="M86 112 L114 112" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
-        <path class="m-frown" d="M86 116 Q100 106 114 116" stroke="#fb7185" stroke-width="3" fill="none" stroke-linecap="round"/>
-        <path class="m-grin" d="M82 108 Q100 124 118 108" stroke="#34d399" stroke-width="3" fill="none" stroke-linecap="round"/>
-      </g>
-      <rect x="56" y="126" width="88" height="70" rx="22" fill="url(#body${u})" stroke="url(#rim${u})" stroke-width="3"/>
-      <circle class="glow" cx="100" cy="140" r="4" fill="#22d3ee" filter="url(#glow${u})"/>
-      <text x="100" y="180" text-anchor="middle" font-size="36" font-weight="900" font-family="Arial,sans-serif" fill="url(#rim${u})" filter="url(#glow${u})">M</text>
-    </g>
-  </svg>`;
-}
-
-function mountMascots() {
-  $("mascot").innerHTML = mascotSVG("h");
-  $("procMascot").innerHTML = mascotSVG("p");
-}
-
-// mood: null | "thinking" | "scanning" | "celebrate" | "sad" | "wave"
-// autoResetMs returns the robot to idle after a short reaction
-function setMood(mood, autoResetMs) {
-  clearTimeout(moodTimer);
-  moodTimer = null;
-  [$("mascot"), $("procMascot")].forEach(el => {
-    el.classList.remove(...MOODS);
-    if (mood) el.classList.add(mood);
-  });
-  if (autoResetMs) moodTimer = setTimeout(() => setMood(null), autoResetMs);
-}
-
-// ---------- helpers ----------
-let toastTimer;
-function toast(msg) {
-  const t = $("toast");
-  t.textContent = msg;
-  t.className = "toast show";
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
-}
-
-function setNotice(msg, kind) {
-  const n = $("notice");
-  n.textContent = msg;
-  n.className = "notice" + (kind ? " " + kind : "");
-  n.hidden = false;
-}
-function clearNotice() { $("notice").hidden = true; $("notice").textContent = ""; }
-
-function setServerPill(text, cls) {
-  const p = $("apiStatus");
-  p.textContent = text;
-  p.className = "pill " + cls;
-}
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-// Sends a request with a timeout. Always returns a plain object or throws a readable error.
-// Non-JSON or array responses are treated as an empty object, so callers see a missing field.
-async function apiJson(path, opts = {}, ms = 20000) {
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), ms);
-  try {
-    const res = await fetch(API_BASE + path, { ...opts, signal: ctrl.signal });
-    let data = null;
-    try { data = await res.json(); } catch (e) { data = null; }
-    if (!res.ok) {
-      const msg = data && typeof data.error === "string" && data.error.trim()
-        ? data.error.trim().slice(0, 300)
-        : "The server returned an error (" + res.status + ").";
-      throw new Error(msg);
-    }
-    return data && typeof data === "object" && !Array.isArray(data) ? data : {};
-  } catch (e) {
-    if (e.name === "AbortError") throw new Error("TIMEOUT");
-    if (e instanceof TypeError) throw new Error("NETWORK");
-    throw e;
-  } finally {
-    clearTimeout(timer);
+  /* ---------- storage (never throws) ---------- */
+  function sGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function sSet(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
+  function arr(a) { return Array.isArray(a) ? a : []; }
+  function load() {
+    try { var s = JSON.parse(sGet(KEY) || "null"); if (s && typeof s === "object") return { projects: arr(s.projects), topics: arr(s.topics), competitors: arr(s.competitors), tasks: arr(s.tasks) }; } catch (e) {}
+    return { projects: [], topics: [], competitors: [], tasks: [] };
   }
-}
+  function save() { var ok = sSet(KEY, JSON.stringify(S.data)); if (!ok) toast("Could not save: browser storage is unavailable or full.", true); return ok; }
+  function commit(fn) { var snap = JSON.stringify(S.data); fn(S.data); if (save()) return true; S.data = JSON.parse(snap); return false; }
 
-function friendly(err) {
-  if (err.message === "TIMEOUT") return "The server took too long to respond. Free hosting can sleep when idle. Wait a minute and try again.";
-  if (err.message === "NETWORK") return "Could not reach the server. Check your internet connection, then try again.";
-  if (err.message === "MALFORMED") return "The server sent an unexpected response. Checking will try again.";
-  return err.message || "Something went wrong.";
-}
-
-// ---------- server check (GET /health only, free) ----------
-async function checkServer() {
-  setServerPill("Checking server…", "busy");
-  try {
-    await apiJson("/health", { method: "GET" }, 30000);
-    setServerPill("Server online", "ok");
-    toast("Server is online. No video was generated.");
-  } catch (e) {
-    setServerPill("Server not reachable", "err");
-    setNotice(friendly(e), "err");
+  /* ---------- DOM helpers: every child is a Node or text ---------- */
+  function $(id) { return document.getElementById(id); }
+  function h(tag, p) {
+    var n = document.createElement(tag), k, v;
+    p = p || {};
+    for (k in p) {
+      if (!Object.prototype.hasOwnProperty.call(p, k)) continue;
+      v = p[k];
+      if (v === undefined || v === null || v === false) continue;
+      if (k === "text") n.textContent = String(v);
+      else if (k === "class") n.className = String(v);
+      else if (k === "value") n.value = String(v);
+      else if (k === "checked") n.checked = !!v;
+      else if (k.indexOf("on") === 0 && typeof v === "function") n.addEventListener(k.slice(2), v);
+      else n.setAttribute(k, v === true ? "" : String(v));
+    }
+    var kids = Array.prototype.slice.call(arguments, 2);
+    while (kids.length) {
+      var c = kids.shift();
+      if (c === null || c === undefined || c === false) continue;
+      if (Array.isArray(c)) { kids = c.concat(kids); continue; }
+      n.appendChild(typeof c === "object" && c.nodeType ? c : document.createTextNode(String(c)));
+    }
+    return n;
   }
-}
-
-// ---------- processing panel (driven only by real status values) ----------
-function setStage(index) {
-  document.querySelectorAll("#procStages li").forEach((li, i) => {
-    li.classList.toggle("done", i < index);
-    li.classList.toggle("active", i === index);
-  });
-}
-
-function tickElapsed() {
-  const s = Math.floor((Date.now() - startedAt) / 1000);
-  $("elapsed").textContent = "Time so far: " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
-}
-
-function showProcessing(title, note) {
-  panelDone = false;
-  $("procTitle").textContent = title;
-  $("procNote").textContent = note;
-  $("proc").hidden = false;
-  $("procBar").className = "bar";
-  $("stopBtn").textContent = "Stop checking";
-  startedAt = Date.now();
-  clearInterval(elapsedTimer);
-  tickElapsed();
-  elapsedTimer = setInterval(tickElapsed, 1000);
-}
-
-// Stops the timer and keeps the final state visible
-function finishProcessing(title, note, barClass) {
-  panelDone = true;
-  clearInterval(elapsedTimer);
-  elapsedTimer = null;
-  tickElapsed();
-  $("procTitle").textContent = title;
-  $("procNote").textContent = note;
-  $("procBar").className = "bar " + (barClass || "");
-  $("stopBtn").textContent = "Close";
-}
-
-function hideProcessing() {
-  clearInterval(elapsedTimer);
-  elapsedTimer = null;
-  $("proc").hidden = true;
-  setMood(null);
-}
-
-// Clears the old video and its link so an old result never shows as the new one
-function clearResult() {
-  const v = $("vid");
-  try { v.pause(); } catch (e) {}
-  v.removeAttribute("src");
-  try { v.load(); } catch (e) {}
-  $("dl").removeAttribute("href");
-  $("result").hidden = true;
-}
-
-function showResult(url) {
-  $("vid").src = url;
-  $("dl").href = url;
-  $("result").hidden = false;
-  setNotice("Video ready. Preview it below or open it to download.", "ok");
-}
-
-// ---------- form ----------
-function updateCount() {
-  $("charCount").textContent = $("prompt").value.length + " / " + MAX_PROMPT;
-}
-
-function updateGenButton() {
-  $("genBtn").disabled = busy || !$("costAck").checked;
-  $("genBtn").textContent = busy ? "Generating… please wait" : "Generate video";
-}
-
-// Prediction IDs must look like plain identifiers before they are used in a URL
-function pickId(data) {
-  const v = data ? (data.id ?? data.prediction_id) : null;
-  const s = typeof v === "number" ? String(v) : v;
-  return typeof s === "string" && ID_RE.test(s) ? s : null;
-}
-
-// Replicate can return output as a URL string or a list of URLs. Only https links are accepted.
-function pickVideoUrl(output) {
-  let raw = null;
-  if (typeof output === "string") raw = output;
-  else if (Array.isArray(output)) raw = output.find(x => typeof x === "string") || null;
-  if (!raw) return null;
-  try {
-    const u = new URL(raw);
-    return u.protocol === "https:" ? u.href : null;
-  } catch (e) { return null; }
-}
-
-// ---------- generation: POST /generate once, then GET /prediction/<id> ----------
-async function onSubmit(e) {
-  e.preventDefault();
-  if (busy) return;                              // duplicate-request guard
-  const prompt = $("prompt").value.trim();
-
-  if (!prompt) { setNotice("Please describe your video first.", "err"); $("prompt").focus(); return; }
-  if ($("prompt").value.length > MAX_PROMPT) { setNotice("Please shorten your description to " + MAX_PROMPT + " characters.", "err"); return; }
-  if (!$("costAck").checked) { setNotice("Please tick the cost box first.", "err"); return; }
-  if (!confirm("This may use paid AI credits and may cost money. Start generation now?")) return;
-
-  busy = true;
-  const token = ++genToken;
-  updateGenButton();
-  clearNotice();
-  clearResult();
-  setMood("thinking");
-  showProcessing("Sending your request…", "The server is starting the job.");
-  setStage(0);
-
-  try {
-    let data;
-    postPending = true;
-    try {
-      data = await apiJson("/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt })
-      }, 60000);
-    } finally {
-      postPending = false;
-    }
-
-    // The user pressed Stop while the request was pending. Do not poll.
-    if (token !== genToken) {
-      const id = pickId(data);
-      setNotice(id
-        ? "Checking was stopped. A job may already have started on the server (ID: " + id + "). Check your Replicate dashboard. Stopping does not cancel the server job."
-        : "Checking was stopped before the server confirmed a job.");
-      return;
-    }
-
-    const id = pickId(data);
-    if (!id) throw new Error("The server did not return a valid prediction ID. Nothing was confirmed.");
-    await poll(token, id, data);
-  } catch (err) {
-    if (token !== genToken) {
-      setNotice(friendly(err), "err");
-      return;
-    }
-    setMood("sad");
-    if (err.message === "TIMEOUT" || err.message === "NETWORK") {
-      setNotice("The request did not finish in time. A job may still have started on the server. Check your Replicate dashboard before trying again.", "err");
-    } else {
-      setNotice(friendly(err), "err");
-    }
-    finishProcessing("Request not completed", "No confirmed video. See the message below.", "stop");
-  } finally {
-    busy = false;
-    updateGenButton();
+  function icon(id, cls) {
+    var s = document.createElementNS(SVG, "svg");
+    s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true");
+    if (cls) s.setAttribute("class", cls);
+    var u = document.createElementNS(SVG, "use"); u.setAttribute("href", "#" + id); s.appendChild(u);
+    return s;
   }
-}
-
-// Handles one status object for the current generation. Returns true when the job has finished.
-function handleStatus(j) {
-  const st = typeof j.status === "string" ? j.status.trim().toLowerCase() : "starting";
-
-  if (st === "succeeded") {
-    setStage(2);
-    const url = pickVideoUrl(j.output);
-    if (!url) {
-      setMood("sad");
-      setNotice("The job finished, but no secure video link was returned. Check your Replicate dashboard.", "err");
-      finishProcessing("Finished without a video link", "The server did not return a usable link.", "stop");
-      return true;
-    }
-    setMood("celebrate", 6000);
-    finishProcessing("Video ready!", "Your video is below.", "done");
-    showResult(url);
-    return true;
+  function tile(t) { return h("span", { class: "ico " + t.tone }, icon(t.icon)); }
+  function badge(st) { return h("span", { class: "badge " + (BADGE[st[0]] || ""), text: st[1] }); }
+  function field(text, c) { return h("div", { class: "field" }, h("label", { for: c.id, text: text }), c); }
+  function inp(id, p) { var o = { id: id, type: "text" }; Object.keys(p || {}).forEach(function (k) { o[k] = p[k]; }); return h("input", o); }
+  function ta(id, p) { var o = { id: id }; Object.keys(p || {}).forEach(function (k) { o[k] = p[k]; }); return h("textarea", o); }
+  function sel(id, list, val) {
+    var s = h("select", { id: id });
+    list.forEach(function (x) { var v = Array.isArray(x) ? x[0] : x, t = Array.isArray(x) ? x[1] : x; s.appendChild(h("option", { value: String(v), text: String(t) })); });
+    if (val != null) s.value = String(val);
+    return s;
+  }
+  function panel() { return h("section", { class: "card panel" }, Array.prototype.slice.call(arguments)); }
+  function note(id) { return h("div", { id: id, class: "notice", hidden: true }); }
+  function setNote(id, msg, kind) { var n = $(id); if (!n) return; n.textContent = msg; n.className = "notice" + (kind ? " " + kind : ""); n.hidden = !msg; }
+  function fillList(ol, items) { ol.replaceChildren.apply(ol, items.map(function (t) { return h("li", {}, h("span", { text: t })); })); }
+  function counter(el, n, max) { el.textContent = n + " / " + max; el.classList.toggle("over", n > max); }
+  function toast(msg, err) {
+    var t = $("toast"); if (!t) return;
+    t.textContent = msg; t.className = "toast show" + (err ? " err" : "");
+    clearTimeout(S.tt); S.tt = setTimeout(function () { t.classList.remove("show"); }, 2800);
   }
 
-  if (st === "failed" || st === "canceled" || st === "cancelled") {
-    setMood("sad");
-    const reason = typeof j.error === "string" && j.error.trim()
-      ? j.error.trim().slice(0, 300)
-      : (st === "failed" ? "The generation failed." : "The generation was cancelled.") + " No video was produced.";
-    setNotice(reason, "err");
-    finishProcessing(st === "failed" ? "Generation failed" : "Generation cancelled", "No video was produced.", "stop");
-    return true;
+  /* ---------- text helpers ---------- */
+  function fill(t, v) { return t.replace(/\{(\w)\}/g, function (_, c) { return v[c] || ""; }); }
+  function clip(s, max) { if (s.length <= max) return s; var c = s.slice(0, max), i = c.lastIndexOf(" "); return (i > 20 ? c.slice(0, i) : c).trim(); }
+  function fmtT(s) { return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
+  function langNote(l) { return l !== "English" ? " Template text is English only. Other languages need an AI service, which is not connected." : ""; }
+  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function fmtDate(s) { try { return new Date(s).toLocaleDateString(); } catch (e) { return ""; } }
+  function str(v, n) { return typeof v === "string" ? v.slice(0, n) : ""; }
+  function strArr(a, n, len) { return arr(a).filter(function (x) { return typeof x === "string"; }).slice(0, n).map(function (x) { return x.slice(0, len); }); }
+  function hex(v, d) { return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v) ? v : d; }
+  function ci(v, a, b, d) { var n = parseInt(v, 10); return isFinite(n) ? Math.min(b, Math.max(a, n)) : d; }
+  function copy(text, label) {
+    if (!text) { toast("Nothing to copy yet.", true); return; }
+    var ok = function () { toast(label + " copied."); }, bad = function () { toast("Copy is not available here. Select the text and copy it.", true); };
+    try { navigator.clipboard.writeText(text).then(ok, bad); } catch (e) { bad(); }
   }
-
-  if (st === "processing" || st === "running") {
-    setMood("scanning");
-    setStage(1);
-    $("procTitle").textContent = "Creating your video…";
-    $("procNote").textContent = "Status from the server: " + st + ".";
-  } else if (st === "starting" || st === "queued" || st === "") {
-    setMood("thinking");
-    setStage(0);
-    $("procTitle").textContent = "Starting your job…";
-    $("procNote").textContent = "Status from the server: " + (st || "starting") + ".";
-  } else {
-    // Unknown status: keep waiting. It is never treated as success.
-    $("procNote").textContent = "The server reported status \u201C" + st.slice(0, 40) + "\u201D. Still checking.";
+  function download(name, blob) {
+    var u = URL.createObjectURL(blob), a = h("a", { href: u, download: name });
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 1500);
   }
-  return false;
-}
+  function dlText(name, text, type) { download(name, new Blob([text], { type: type })); }
 
-async function poll(token, predictionId, firstData) {
-  const started = Date.now();
-  let failures = 0;
-
-  if (handleStatus(firstData)) return;
-
-  while (token === genToken) {
-    if (Date.now() - started > MAX_POLL_MS) {
-      if (token !== genToken) return;
-      setMood(null);
-      setNotice("Stopped checking after 15 minutes. The job may still finish on the server. Check your Replicate dashboard before generating again.", "err");
-      finishProcessing("Stopped checking", "The job may still be running on the server.", "stop");
-      return;
-    }
-    await sleep(POLL_MS);
-    if (token !== genToken) return;
-    try {
-      // GET only, so repeated status checks are safe
-      const j = await apiJson("/prediction/" + encodeURIComponent(predictionId), { method: "GET" }, 20000);
-      if (token !== genToken) return;
-      if (typeof j.status !== "string") throw new Error("MALFORMED");
-      failures = 0;
-      if (handleStatus(j)) return;
-    } catch (err) {
-      if (token !== genToken) return;
-      failures++;
-      if (failures >= 5) {
-        setMood("sad");
-        setNotice("Lost contact with the server while checking. Your prediction ID is " + predictionId + ". Try again later.", "err");
-        finishProcessing("Lost contact", "Checking stopped after several failed attempts.", "stop");
-        return;
-      }
-    }
+  /* ---------- theme & motion ---------- */
+  function isLight() { return document.documentElement.getAttribute("data-theme") === "light"; }
+  function applyTheme(light) {
+    document.documentElement.setAttribute("data-theme", light ? "light" : "dark");
+    var lbl = $("themeLbl"), use = $("themeUse"), b = $("themeBtn");
+    if (lbl) lbl.textContent = light ? "Dark" : "Light";
+    if (use) use.setAttribute("href", light ? "#i-moon" : "#i-sun");
+    if (b) b.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+    var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", light ? "#FFF7EF" : "#12070C");
   }
-}
+  function toggleTheme() { var l = !isLight(); applyTheme(l); sSet(TK, l ? "light" : "dark"); if (route().view === "settings") render(); }
+  function applyMotion(off) { S.motionOff = off; document.documentElement.classList.toggle("no-motion", off); }
+  function toggleMotion() { var off = !S.motionOff; applyMotion(off); sSet(MK, off ? "1" : "0"); render(); }
 
-// Stop button: stops this page from checking. It never cancels the server job.
-function stopChecking() {
-  if (panelDone) { hideProcessing(); return; }
-  genToken++;                                    // any running poll or pending POST result is now ignored
-  hideProcessing();
-  setNotice(postPending
-    ? "Stopped checking. The request is still being sent. If a job starts, this page will not check it, and the server job is not cancelled."
-    : "Stopped checking. The server job is not cancelled and may still finish. Check your Replicate dashboard.");
-}
-
-// ---------- tool cards (honest: no fake features) ----------
-document.querySelectorAll(".soon").forEach(b => {
-  b.addEventListener("click", () => {
-    if (!busy) setMood("wave", 1500);
-    toast("This tool is not connected yet. It will be added in a future update.");
-  });
-});
-
-// ---------- hero mascot: tap, or Enter/Space when focused ----------
-function waveHero() { if (!busy) setMood("wave", 1500); }
-$("mascot").addEventListener("click", waveHero);
-$("mascot").addEventListener("keydown", e => {
-  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); waveHero(); }
-});
-
-// Subtle 3D tilt that follows the pointer on desktop (disabled with reduce-motion)
-function resetTilt() {
-  $("mascot").style.setProperty("--rx", "0deg");
-  $("mascot").style.setProperty("--ry", "0deg");
-}
-
-function setupTilt() {
-  const stage = $("heroStage");
-  let canHover = false;
-  try { canHover = window.matchMedia("(hover:hover) and (pointer:fine)").matches; } catch (e) {}
-  if (!stage || !canHover) return;
-  stage.addEventListener("pointermove", e => {
-    if (motionOff) return;
-    const r = stage.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
-    $("mascot").style.setProperty("--rx", (x * 16).toFixed(2) + "deg");
-    $("mascot").style.setProperty("--ry", (-y * 12).toFixed(2) + "deg");
-  });
-  stage.addEventListener("pointerleave", resetTilt);
-}
-
-// Fade sections in as they scroll into view
-function setupReveal() {
-  const items = document.querySelectorAll(".reveal");
-  if (motionOff || !("IntersectionObserver" in window)) {
-    items.forEach(el => el.classList.add("in"));
-    return;
+  /* ---------- routing ---------- */
+  function route() {
+    var p = location.hash.replace(/^#\/?/, "").split("/");
+    if (p[0] === "tool" && p[1] === "projects") return { view: "projects" };
+    if (p[0] === "tool" && BY[p[1]]) return { view: "tool", id: p[1] };
+    if (p[0] === "tools" || p[0] === "projects" || p[0] === "settings") return { view: p[0] };
+    return { view: "home" };
   }
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
+  function goBack() { if (S.depth > 0) { S.back = true; history.back(); } else go("#/"); }
+  function render() {
+    var r = route(), root = $("view");
+    if (!root) return;
+    root.replaceChildren();
+    var key = r.view === "tool" ? "tools" : r.view;
+    document.querySelectorAll("[data-nav]").forEach(function (el) {
+      if (el.getAttribute("data-nav") === key) el.setAttribute("aria-current", "page"); else el.removeAttribute("aria-current");
     });
-  }, { threshold: 0.08 });
-  items.forEach(el => io.observe(el));
-}
-
-// ---------- motion and theme preferences ----------
-function applyMotion(off) {
-  motionOff = off;
-  document.documentElement.classList.toggle("no-motion", off);
-  $("motionBtn").setAttribute("aria-pressed", off ? "true" : "false");
-  if (off) resetTilt();
-}
-$("motionBtn").addEventListener("click", () => {
-  const off = !motionOff;
-  applyMotion(off);
-  safeSet(MOTION_KEY, off ? "1" : "0");
-});
-
-function applyTheme(light) {
-  document.documentElement.dataset.theme = light ? "light" : "dark";
-  setBtnLabel($("themeBtn"), light ? "Dark mode" : "Light mode", light ? "Dark" : "Light");
-}
-$("themeBtn").addEventListener("click", () => {
-  const light = document.documentElement.dataset.theme !== "light";
-  applyTheme(light);
-  safeSet(THEME_KEY, light ? "light" : "dark");
-});
-
-// ---------- mobile navigation ----------
-function setMenu(open) {
-  $("mobileNav").classList.toggle("open", open);
-  $("menuBtn").setAttribute("aria-expanded", open ? "true" : "false");
-  $("menuBtn").setAttribute("aria-label", open ? "Close menu" : "Open menu");
-  $("menuBtn").textContent = open ? "✕" : "☰";
-}
-$("menuBtn").addEventListener("click", () => setMenu(!$("mobileNav").classList.contains("open")));
-document.querySelectorAll("#mobileNav a").forEach(a => a.addEventListener("click", () => setMenu(false)));
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && $("mobileNav").classList.contains("open")) {
-    setMenu(false);
-    $("menuBtn").focus();
+    if (r.view === "home") { document.title = "MotionMind AI — Creator Toolkit"; home(root); }
+    else if (r.view === "tools") { document.title = "All tools · MotionMind AI"; toolsPage(root); }
+    else if (r.view === "projects") { document.title = "Saved projects · MotionMind AI"; projectsPage(root); }
+    else if (r.view === "settings") { document.title = "Settings · MotionMind AI"; settingsPage(root); }
+    else { document.title = BY[r.id].name + " · MotionMind AI"; toolPage(root, r.id); }
+    window.scrollTo(0, 0);
   }
-});
-// Close the mobile menu if the window becomes wide enough for the desktop menu
-function onWide(e) { if (e.matches) setMenu(false); }
-try {
-  const wide = window.matchMedia("(min-width:861px)");
-  if (wide.addEventListener) wide.addEventListener("change", onWide);
-  else if (wide.addListener) wide.addListener(onWide);
-} catch (e) {}
 
-// ---------- events ----------
-$("prompt").addEventListener("input", updateCount);
-$("costAck").addEventListener("change", updateGenButton);
-$("genForm").addEventListener("submit", onSubmit);
-$("stopBtn").addEventListener("click", stopChecking);
-$("checkBtn").addEventListener("click", checkServer);
+  /* ---------- shared cards ---------- */
+  function filterTools(q, cat) {
+    var t = String(q || "").trim().toLowerCase();
+    return TOOLS.filter(function (x) {
+      if (cat && cat !== "all" && x.cat !== cat) return false;
+      return !t || [x.name, x.short, x.desc, x.st[1]].join(" ").toLowerCase().indexOf(t) !== -1;
+    });
+  }
+  function grid(items, msg) {
+    if (!items.length) return h("div", { class: "empty" }, h("strong", { text: "No matching tools" }), h("p", { class: "small", text: msg }));
+    return h("div", { class: "tiles" }, items.map(function (t) {
+      return h("a", { class: "card tile", href: t.href }, tile(t), h("strong", { text: t.short }), badge(t.st));
+    }));
+  }
+  function sectHead(title, href, link) { return h("div", { class: "sect" }, h("h2", { text: title }), href ? h("a", { class: "more", href: href, text: link }) : null); }
+  function catChips(onPick) {
+    return h("div", { class: "chipbar", role: "group", "aria-label": "Filter by category" }, CATS.map(function (c) {
+      return h("button", { class: "fchip", type: "button", "aria-pressed": S.cat === c[0] ? "true" : "false", text: c[1], onclick: function () { S.cat = c[0]; onPick(); } });
+    }));
+  }
 
-// ---------- init (reads saved preferences only; never writes them here) ----------
-const savedTheme = safeGet(THEME_KEY);
-const savedMotion = safeGet(MOTION_KEY);
-applyTheme(savedTheme === "light");
-applyMotion(savedMotion === "1" || (savedMotion !== "0" && prefersReducedMotion()));
-mountMascots();
-setupTilt();
-setupReveal();
-updateCount();
-updateGenButton();
-checkServer();
+  /* ---------- home ---------- */
+  function home(root) {
+    var q = h("input", { id: "homeSearch", type: "search", placeholder: "Search tools, e.g. thumbnail or tags", "aria-label": "Search tools", maxlength: "40", autocomplete: "off", value: S.query });
+    q.addEventListener("input", function () { S.query = q.value; paintHome(); });
+    root.append(
+      h("section", { class: "card hero" },
+        h("span", { class: "eyebrow", text: "YouTube Creator Toolkit" }),
+        h("h1", {}, "Plan, research and polish ", h("span", { class: "gt", text: "every upload" })),
+        h("p", { class: "muted", text: "Find video ideas, design thumbnails, write titles and tags, and plan what you post. Tools that need live YouTube data are clearly labelled." }),
+        h("div", { class: "row" }, h("a", { class: "btn", href: "#/tool/ideas", text: "Start with an idea" }), h("a", { class: "btn ghost", href: "#/tools", text: "Browse all tools" }))),
+      h("div", { class: "search" }, icon("i-search"), q),
+      h("div", { id: "homeBody" }));
+    paintHome();
+  }
+  function paintHome() {
+    var b = $("homeBody"); if (!b) return;
+    var q = S.query.trim();
+    if (q) { b.replaceChildren(sectHead("Results"), grid(filterTools(q, "all"), "Try words like thumbnail, tags or script.")); return; }
+    var open = S.data.tasks.filter(function (t) { return !t.done; }).length;
+    b.replaceChildren(
+      sectHead("Featured tools"),
+      h("div", { class: "featured" }, TOOLS.filter(function (t) { return t.featured; }).map(function (t) {
+        return h("a", { class: "card feat", href: t.href }, tile(t), h("span", { class: "feat-txt" }, h("strong", { text: t.name }), h("span", { class: "small", text: t.desc }), badge(t.st)));
+      })),
+      sectHead("Your dashboard"),
+      h("div", { class: "tiles" },
+        h("div", { class: "card panel" }, h("strong", { text: String(S.data.projects.length) }), h("div", { class: "small", text: "Saved projects" })),
+        h("div", { class: "card panel" }, h("strong", { text: String(open) }), h("div", { class: "small", text: "Open planning tasks" })),
+        h("div", { class: "card panel" }, h("strong", { text: String(S.data.competitors.length) }), h("div", { class: "small", text: "Competitor notes" }))),
+      sectHead("Recent projects", "#/projects", "View all"),
+      recent());
+  }
+  function recent() {
+    var l = S.data.projects.slice(0, 3);
+    if (!l.length) return h("div", { class: "empty" }, h("strong", { text: "No saved projects yet" }), h("p", { class: "small", text: "Create a thumbnail, idea list or script, then tap Save. It will appear here." }), h("a", { class: "btn sm", href: "#/tool/thumbs", text: "Design a thumbnail" }));
+    return h("div", { class: "list" }, l.map(function (p) {
+      return h("a", { href: "#/projects" }, h("strong", { text: p.name }), h("span", { class: "small", text: (TYPE[p.type] || "Project") + " · " + fmtDate(p.updated) }));
+    }));
+  }
+
+  /* ---------- all tools ---------- */
+  function toolsPage(root) {
+    var q = h("input", { id: "toolsSearch", type: "search", placeholder: "Search tools", "aria-label": "Search tools", maxlength: "40", autocomplete: "off", value: S.query });
+    var g = h("div", {});
+    var refresh = function () { g.replaceChildren(grid(filterTools(q.value, S.cat), "Try another word or pick All.")); };
+    q.addEventListener("input", function () { S.query = q.value; refresh(); });
+    root.append(h("div", { class: "page-head" }, h("h1", { text: "All tools" }), h("p", { text: "Pick a category or search. The labels show what works today." })),
+      h("div", { class: "search" }, icon("i-search"), q), catChips(refresh), g,
+      panel(h("strong", { text: "What the labels mean" }), h("ul", { class: "list" },
+        h("li", {}, h("span", { text: "Works now: runs in your browser with no outside data." }), badge(["ok", "Works now"])),
+        h("li", {}, h("span", { text: "Template: fixed patterns filled with your words. Not AI." }), badge(["tpl", "Template · not AI"])),
+        h("li", {}, h("span", { text: "Needs API: requires a connected YouTube or AI service. Not connected." }), badge(["api", "Needs API"])),
+        h("li", {}, h("span", { text: "Your entries: numbers and notes you type yourself." }), badge(["user", "Your entries"])))));
+    refresh();
+  }
+
+  /* ---------- saved projects ---------- */
+  function projectsPage(root) {
+    root.append(h("div", { class: "page-head" }, h("h1", { text: "Saved projects" }), h("p", { text: "Saved in this browser only. Not synced or backed up. Export a copy to keep it safe." })));
+    root.append(h("div", { class: "row" }, h("button", { class: "btn ghost sm", type: "button", onclick: exportAll }, icon("i-download"), "Export all (JSON)")));
+    if (!S.data.projects.length) {
+      root.append(h("div", { class: "empty mt" }, h("strong", { text: "No saved projects yet" }), h("p", { class: "small", text: "Use a Save button in any tool. Thumbnails, idea lists, scripts and titles can be saved here." }), h("a", { class: "btn sm", href: "#/tool/ideas", text: "Start with an idea" })));
+      return;
+    }
+    root.append(h("div", { class: "list mt" }, S.data.projects.map(function (p) {
+      return h("div", { class: "item" },
+        h("div", {}, h("strong", { text: p.name }), h("div", { class: "small", text: (TYPE[p.type] || "Project") + " · updated " + fmtDate(p.updated) })),
+        h("div", { class: "row tight" },
+          h("button", { class: "btn sm", type: "button", text: "Open", onclick: function () { openProject(p.id); } }),
+          h("button", { class: "btn ghost sm", type: "button", text: "Rename", onclick: function () { renameProject(p.id); } }),
+          h("button", { class: "btn ghost sm", type: "button", text: "Export", onclick: function () { exportOne(p.id); } }),
+          h("button", { class: "btn danger sm", type: "button", text: "Delete", onclick: function () { deleteProject(p.id); } })));
+    })));
+  }
+  function saveProject(type, def, payload) {
+    var name = String(window.prompt("Name this project:", def) || "").trim().slice(0, 60);
+    if (!name) { toast("Save cancelled.", true); return; }
+    var e = { id: uid(), type: type, name: name, data: payload, updated: new Date().toISOString() };
+    if (commit(function (d) { d.projects.unshift(e); d.projects = d.projects.slice(0, 50); })) toast("Saved to Saved Projects on this device.");
+  }
+  function openProject(id) {
+    var p = S.data.projects.find(function (x) { return x.id === id; });
+    if (!p || !p.data) { toast("Project not found.", true); return; }
+    var map = { thumb: "thumbs", idea: "ideas", script: "hooks", title: "titles" };
+    if (!map[p.type]) { toast("This project type cannot be opened.", true); return; }
+    S.pending = { tool: map[p.type], data: p.data };
+    go("#/tool/" + map[p.type]);
+    toast("Opened \u201C" + p.name + "\u201D.");
+  }
+  function renameProject(id) {
+    var p = S.data.projects.find(function (x) { return x.id === id; }); if (!p) return;
+    var n = String(window.prompt("New name:", p.name) || "").trim().slice(0, 60); if (!n) return;
+    if (commit(function () { p.name = n; p.updated = new Date().toISOString(); })) { render(); toast("Renamed."); }
+  }
+  function deleteProject(id) {
+    var p = S.data.projects.find(function (x) { return x.id === id; });
+    if (!p || !window.confirm("Delete \u201C" + p.name + "\u201D? This cannot be undone.")) return;
+    if (commit(function (d) { d.projects = d.projects.filter(function (x) { return x.id !== id; }); })) { render(); toast("Project deleted."); }
+  }
+  function exportOne(id) {
+    var p = S.data.projects.find(function (x) { return x.id === id; });
+    if (p) dlText("project-" + String(p.name).replace(/[^\w-]+/g, "-").slice(0, 40) + ".json", JSON.stringify(p, null, 2), "application/json");
+  }
+  function exportAll() { dlText("motionmind-data-" + Date.now() + ".json", JSON.stringify(S.data, null, 2), "application/json"); toast("Export downloaded."); }
+
+  /* ---------- settings ---------- */
+  function settingsPage(root) {
+    root.append(
+      h("div", { class: "page-head" }, h("h1", { text: "Settings" }), h("p", { text: "Preferences for this browser." })),
+      panel(h("h3", { text: "Appearance" }), h("p", { class: "muted", text: "Current theme: " + (isLight() ? "Light" : "Dark") + ". Saved on this device." }),
+        h("div", { class: "row" }, h("button", { class: "btn ghost sm", type: "button", onclick: toggleTheme, text: isLight() ? "Switch to dark mode" : "Switch to light mode" }))),
+      panel(h("h3", { text: "Motion" }), h("p", { class: "muted", text: "Animations are " + (S.motionOff ? "off" : "on") + ". Your phone's reduced-motion setting is respected by default." }),
+        h("div", { class: "row" }, h("button", { class: "btn ghost sm", type: "button", onclick: toggleMotion, text: S.motionOff ? "Turn animations on" : "Turn animations off" }))),
+      panel(h("h3", { text: "Your data" }), h("p", { class: "muted", text: "Projects, topics, competitor notes and tasks are stored only in this browser. Clearing browser data removes them." }),
+        h("div", { class: "row" },
+          h("button", { class: "btn ghost sm", type: "button", onclick: exportAll, text: "Export all data (JSON)" }),
+          h("button", { class: "btn danger sm", type: "button", onclick: clearAll, text: "Clear all saved data" }))),
+      panel(h("h3", { text: "About" }), h("p", { class: "muted", text: "MotionMind AI is an early-access creator toolkit. This page makes no network requests. Tools labelled Needs API are not connected to live YouTube data yet." })));
+  }
+  function clearAll() {
+    if (!window.confirm("Clear all saved projects, topics, competitor notes and tasks on this device? This cannot be undone.")) return;
+    S.idea = null; S.hook = null; S.seo = "";
+    if (commit(function (d) { d.projects = []; d.topics = []; d.competitors = []; d.tasks = []; })) { render(); toast("All saved data cleared on this device."); }
+  }
+
+  /* ---------- tool shell ---------- */
+  function toolPage(root, id) {
+    var t = BY[id];
+    root.append(h("div", { class: "tool-head" },
+      h("button", { class: "btn ghost sm back", type: "button", onclick: goBack }, icon("i-back"), "Back"),
+      h("div", { class: "tool-title" }, h("h1", { text: t.name }), badge(t.st))));
+    var body = h("div", {}); root.append(body);
+    if (S.pending && S.pending.tool === id) { var d = S.pending.data; S.pending = null; applyPending(id, d); }
+    var fn = R[id]; if (fn) fn(body);
+  }
+  function applyPending(id, d) {
+    if (!d || typeof d !== "object") return;
+    if (id === "ideas") S.idea = { niche: str(d.niche, 60), audience: str(d.audience, 60), keyword: str(d.keyword, 80), language: str(d.language, 20), ideas: strArr(d.ideas, 20, 200) };
+    if (id === "hooks") S.hook = { topic: str(d.topic, 100), audience: str(d.audience, 60), language: str(d.language, 20), hooks: strArr(d.hooks, 10, 300), lines: strArr(d.lines, 20, 400) };
+    if (id === "titles") S.title = { title: str(d.title, 100), description: str(d.description, 5000), topic: str(d.topic, 80), keyword: str(d.keyword, 80), audience: str(d.audience, 60) };
+    if (id === "thumbs") S.thumb = { head: str(d.head, 40), sub: str(d.sub, 60), bg: hex(d.bg, "#801B3A"), fg: hex(d.fg, "#FFF7FA"), layout: LAY.some(function (x) { return x[0] === d.layout; }) ? d.layout : "left", size: ci(d.size, 48, 140, 96) };
+  }
+
+  /* 1. Video Idea Generator (template engine) */
+  function ideas(body) {
+    var r = S.idea;
+    var n = inp("ideaNiche", { placeholder: "e.g. home cooking", maxlength: "60", value: r ? r.niche : "" });
+    var a = inp("ideaAud", { placeholder: "e.g. busy students", maxlength: "60", value: r ? r.audience : "" });
+    var k = inp("ideaKw", { placeholder: "e.g. meal prep", maxlength: "80", value: r ? r.keyword : "" });
+    var lang = sel("ideaLang", LANGS, r ? r.language : "English");
+    var fmt = sel("ideaFmt", FMTS);
+    var out = h("ol", { id: "ideaOut", class: "list" });
+    body.append(panel(
+      h("p", { class: "muted", text: "Ideas are built from fixed patterns filled with the words you type. They are not AI-generated." }),
+      h("div", { class: "grid2" }, field("Niche", n), field("Target audience", a), field("Topic or keyword (optional)", k), field("Language", lang), field("Format", fmt)),
+      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Generate ideas", onclick: genIdeas })),
+      note("ideaNote"), out,
+      h("div", { class: "row" },
+        h("button", { id: "ideaCopy", class: "btn ghost sm", type: "button", disabled: !r, text: "Copy list", onclick: function () { copy(S.idea ? S.idea.ideas.join("\n") : "", "Ideas"); } }),
+        h("button", { id: "ideaSave", class: "btn ghost sm", type: "button", disabled: !r, text: "Save to projects", onclick: function () { if (S.idea) saveProject("idea", (S.idea.keyword || S.idea.niche || "Video") + " ideas", S.idea); } }))));
+    if (r) fillList(out, r.ideas);
+  }
+  function genIdeas() {
+    var n = $("ideaNiche").value.trim(), a = $("ideaAud").value.trim(), k = $("ideaKw").value.trim();
+    if (!n && !k) { setNote("ideaNote", "Type a niche or a keyword first.", "err"); return; }
+    var lang = $("ideaLang").value, v = { n: n || k, a: a || "beginners", k: k || n };
+    var items = IDEA_T.map(function (t) { return fill(t, v); });
+    S.idea = { niche: n, audience: a, keyword: k, language: lang, ideas: items };
+    fillList($("ideaOut"), items);
+    $("ideaCopy").disabled = false; $("ideaSave").disabled = false;
+    setNote("ideaNote", "Template suggestions made from your words. Not AI-generated." + langNote(lang), "");
+  }
+
+  /* 2. Trending Topics (honest API state + your tracker) */
+  function trends(body) {
+    var region = sel("trRegion", [["IN", "India"], ["US", "United States"], ["GB", "United Kingdom"], ["AU", "Australia"]], "IN");
+    var q = inp("trQuery", { placeholder: "Optional search words", maxlength: "80" });
+    var tn = inp("topicName", { placeholder: "e.g. AI tools for students", maxlength: "80" });
+    var ts = inp("topicSource", { placeholder: "e.g. Shorts feed, 21 Oct", maxlength: "80" });
+    body.append(
+      panel(h("div", { class: "row tight" }, h("h3", { text: "Live trend search" }), badge(["api", "Needs API"])),
+        h("p", { class: "muted", text: "Live trends need a YouTube Data API connection on the backend. It is not connected yet, so no trends can be shown." }),
+        h("div", { class: "grid2" }, field("Region", region), field("Search words", q)),
+        h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Search trends", onclick: function () { setNote("trNote", "Live trend search is not connected. Nothing was searched.", "err"); } })),
+        note("trNote")),
+      panel(h("h3", { text: "Your topic tracker" }), h("p", { class: "muted", text: "Note topics you see yourself, with where and when you saw them. Stored only in this browser." }),
+        h("div", { class: "grid2" }, field("Topic", tn), field("Where and when you saw it", ts)),
+        h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Add topic", onclick: addTopic })),
+        note("topicNote"), h("div", { id: "topicList", class: "list" })));
+    paintTopics();
+  }
+  function addTopic() {
+    var name = $("topicName").value.trim(), src = $("topicSource").value.trim();
+    if (!name) { setNote("topicNote", "Type a topic first.", "err"); return; }
+    if (!src) { setNote("topicNote", "Add where and when you saw it, so you can check it later.", "err"); return; }
+    if (S.data.topics.length >= 100) { setNote("topicNote", "Limit of 100 topics reached. Remove some first.", "err"); return; }
+    var e = { id: uid(), name: name.slice(0, 80), source: src.slice(0, 80), added: new Date().toISOString() };
+    if (commit(function (d) { d.topics.unshift(e); })) { $("topicName").value = ""; $("topicSource").value = ""; setNote("topicNote", "Added. Source: entered by you.", "ok"); paintTopics(); }
+  }
+  function paintTopics() {
+    var b = $("topicList"); if (!b) return;
+    if (!S.data.topics.length) { b.replaceChildren(h("div", { class: "empty" }, h("p", { class: "small", text: "No topics yet." }))); return; }
+    b.replaceChildren.apply(b, S.data.topics.map(function (t) {
+      return h("li", {}, h("div", {}, h("strong", { text: t.name }), h("div", { class: "small", text: "Source: " + t.source + " · added " + fmtDate(t.added) })),
+        h("button", { class: "btn danger sm", type: "button", text: "Remove", onclick: function () { commit(function (d) { d.topics = d.topics.filter(function (x) { return x.id !== t.id; }); }); paintTopics(); } }));
+    }));
+  }
+
+  /* 3. Thumbnail Maker (canvas, local PNG export) */
+  function wrap(ctx, text, max) {
+    var lines = [], cur = "";
+    String(text).split(/\s+/).filter(Boolean).forEach(function (w) {
+      var t = cur ? cur + " " + w : w;
+      if (!cur || ctx.measureText(t).width <= max) cur = t; else { lines.push(cur); cur = w; }
+    });
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  function drawThumb(c, t) {
+    var x = c.getContext("2d"), W = c.width, H = c.height;
+    x.save(); x.fillStyle = t.bg; x.fillRect(0, 0, W, H);
+    var g = x.createRadialGradient(W * 0.85, H * 0.1, 40, W * 0.85, H * 0.1, W * 0.8);
+    g.addColorStop(0, "rgba(255,255,255,0.2)"); g.addColorStop(1, "rgba(255,255,255,0)");
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    var big = t.size, small = Math.round(t.size * 0.45), max = W - 160;
+    x.font = "900 " + big + "px Arial, Helvetica, sans-serif";
+    var hl = wrap(x, t.head || "Your headline", max);
+    x.font = "600 " + small + "px Arial, Helvetica, sans-serif";
+    var sl = t.sub ? wrap(x, t.sub, max) : [];
+    var gap = sl.length ? big * 0.25 : 0, total = hl.length * big * 1.1 + gap + sl.length * small * 1.25;
+    var bar = t.layout === "bar", bh = 260, center = t.layout === "center";
+    if (bar) { x.fillStyle = "rgba(0,0,0,0.45)"; x.fillRect(0, H - bh, W, bh); }
+    var y = bar ? (H - bh) + (bh - total) / 2 : (H - total) / 2, tx = center ? W / 2 : 80;
+    x.textAlign = center ? "center" : "left"; x.textBaseline = "top";
+    x.shadowColor = "rgba(0,0,0,0.45)"; x.shadowBlur = 18; x.shadowOffsetY = 4;
+    x.fillStyle = t.fg; x.font = "900 " + big + "px Arial, Helvetica, sans-serif";
+    hl.forEach(function (l) { x.fillText(l, tx, y); y += big * 1.1; });
+    y += gap; x.font = "600 " + small + "px Arial, Helvetica, sans-serif";
+    sl.forEach(function (l) { x.fillText(l, tx, y); y += small * 1.25; });
+    x.restore();
+  }
+  function thumbs(body) {
+    var t = S.thumb;
+    var head = inp("thHead", { placeholder: "e.g. I tried it for 30 days", maxlength: "40", value: t.head });
+    var sub = inp("thSub", { placeholder: "e.g. Honest results", maxlength: "60", value: t.sub });
+    var lay = sel("thLayout", LAY, t.layout);
+    var size = h("input", { id: "thSize", type: "range", min: "48", max: "140", step: "2", value: String(t.size) });
+    var so = h("span", { class: "small" });
+    var bg = h("input", { id: "thBg", type: "color", value: t.bg });
+    var fg = h("input", { id: "thFg", type: "color", value: t.fg });
+    var cv = h("canvas", { id: "thCanvas", width: "1280", height: "720", role: "img", "aria-label": "Thumbnail preview" });
+    body.append(panel(
+      h("p", { class: "muted", text: "Design a 16:9 thumbnail. It is drawn in your browser, not an AI image. These colours change the thumbnail only, not the website theme." }),
+      h("div", { class: "thumb-grid" },
+        h("div", {}, field("Headline (up to 40 characters)", head), field("Sub-text (up to 60 characters)", sub), field("Layout", lay),
+          h("div", { class: "field" }, h("label", { for: "thSize", text: "Font size" }), size, so),
+          h("div", { class: "grid2" }, field("Background colour", bg), field("Text colour", fg))),
+        h("div", {}, cv, h("p", { class: "small mt", text: "Preview updates as you type. Download gives a 1280 × 720 PNG." }))),
+      h("div", { class: "row" },
+        h("button", { class: "btn", type: "button", text: "Download PNG", onclick: dlThumb }),
+        h("button", { class: "btn ghost", type: "button", text: "Save design to projects", onclick: function () {
+          if (!S.thumb.head.trim()) { toast("Add a headline before saving.", true); return; }
+          saveProject("thumb", S.thumb.head.slice(0, 40), Object.assign({}, S.thumb));
+        } }))));
+    var sync = function () {
+      S.thumb = { head: head.value.slice(0, 40), sub: sub.value.slice(0, 60), bg: hex(bg.value, "#801B3A"), fg: hex(fg.value, "#FFF7FA"),
+        layout: LAY.some(function (x) { return x[0] === lay.value; }) ? lay.value : "left", size: ci(size.value, 48, 140, 96) };
+      so.textContent = S.thumb.size + " px";
+      drawThumb(cv, S.thumb);
+    };
+    [head, sub, lay, size, bg, fg].forEach(function (el) { el.addEventListener("input", sync); });
+    lay.addEventListener("change", sync);
+    sync();
+  }
+  function dlThumb() {
+    if (!S.thumb.head.trim()) { toast("Add a headline before downloading.", true); return; }
+    var c = $("thCanvas");
+    if (!c || !c.toBlob) { toast("Download is not supported in this browser.", true); return; }
+    c.toBlob(function (b) { if (!b) { toast("Could not create the PNG.", true); return; } download("thumbnail-" + Date.now() + ".png", b); toast("PNG downloaded."); }, "image/png");
+  }
+
+  /* 4. Video Analyzer (link format check only) */
+  function parseVid(s) {
+    var m = String(s).trim().match(/^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[&?#\/].*)?$/);
+    return m ? m[1] : null;
+  }
+  function analyzer(body) {
+    var u = inp("anUrl", { type: "url", placeholder: "https://www.youtube.com/watch?v=...", maxlength: "200" });
+    body.append(panel(h("p", { class: "muted", text: "Paste a YouTube video link. It is checked on this device only. Nothing is fetched from YouTube." }),
+      field("YouTube video link", u),
+      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Check link", onclick: function () { checkVid(u.value); } })),
+      note("anNote"), h("div", { id: "anOut", hidden: true })));
+  }
+  function checkVid(v) {
+    var id = parseVid(v), out = $("anOut");
+    if (!id) { setNote("anNote", "That does not look like a YouTube video link. Use youtube.com/watch, youtube.com/shorts or youtu.be.", "err"); out.hidden = true; return; }
+    setNote("anNote", "Valid link. Video ID: " + id + ". Nothing has been fetched, because the YouTube API is not connected.", "ok");
+    out.replaceChildren(h("h3", { class: "mt", text: "What this tool can and cannot show" }),
+      h("ul", { class: "list" },
+        h("li", {}, h("div", {}, h("strong", { text: "Public video details" }), h("div", { class: "small", text: "Title, channel, date, views and duration. Needs a YouTube Data API." })), badge(["api", "Needs API"])),
+        h("li", {}, h("div", {}, h("strong", { text: "Retention and traffic sources" }), h("div", { class: "small", text: "Only the channel owner can see these, through YouTube Analytics sign-in." })), badge(["api", "Owner only"])),
+        h("li", {}, h("div", {}, h("strong", { text: "Judging footage or pacing" }), h("div", { class: "small", text: "Not done by this tool. No scores are shown." })))));
+    out.hidden = false;
+  }
+
+  /* 5. SEO Keywords & Tags */
+  function seoParse(raw) {
+    var seen = {}, out = [], dup = 0;
+    String(raw).split(/[,\n]/).forEach(function (p) {
+      var t = p.replace(/\s+/g, " ").trim().slice(0, 100); if (!t) return;
+      var k = t.toLowerCase(); if (seen[k]) { dup++; return; } seen[k] = true; out.push(t);
+    });
+    return { list: out.slice(0, 200), dup: dup };
+  }
+  function seo(body) {
+    var t = ta("seoIn", { maxlength: "1500", placeholder: "e.g. bike ride, mountain roads, sunset cinematic", value: S.seo });
+    body.append(panel(h("p", { class: "muted", text: "Enter keywords separated by commas or new lines. Duplicates are removed. Tags over 30 characters are flagged. Search volume is not shown, because no keyword data is connected." }),
+      field("Your keywords and tags", t),
+      h("div", { class: "row" },
+        h("button", { class: "btn sm", type: "button", text: "Clean up", onclick: function () { t.value = seoParse(t.value).list.join(", "); seoPaint(); } }),
+        h("button", { class: "btn ghost sm", type: "button", text: "Sort A–Z", onclick: function () { t.value = seoParse(t.value).list.sort(function (a, b) { return a.localeCompare(b); }).join(", "); seoPaint(); } }),
+        h("button", { class: "btn ghost sm", type: "button", text: "Copy tags", onclick: function () { copy(seoParse(t.value).list.join(", "), "Tags"); } }),
+        h("button", { class: "btn danger sm", type: "button", text: "Clear", onclick: function () { t.value = ""; seoPaint(); } })),
+      h("div", { id: "seoChips", class: "chips", "aria-live": "polite" }), h("p", { id: "seoStats", class: "small mt" })));
+    t.addEventListener("input", seoPaint);
+    seoPaint();
+  }
+  function seoPaint() {
+    var t = $("seoIn"), box = $("seoChips"), st = $("seoStats");
+    if (!t || !box || !st) return;
+    S.seo = t.value.slice(0, 1500);
+    var r = seoParse(t.value);
+    box.replaceChildren.apply(box, r.list.map(function (x, i) {
+      return h("span", { class: "chip" + (x.length > 30 ? " warn" : ""), title: x.length > 30 ? "Long tag: consider shortening" : null },
+        h("span", { text: x }),
+        h("button", { type: "button", text: "×", "aria-label": "Remove " + x, onclick: function () { t.value = r.list.filter(function (_, j) { return j !== i; }).join(", "); seoPaint(); } }));
+    }));
+    st.textContent = r.list.length + " unique · about " + r.list.join(",").length + " characters" + (r.dup ? " · " + r.dup + " duplicate(s) removed" : "") + ".";
+  }
+
+  /* 6. Title & Description (template) */
+  function titles(body) {
+    var d = S.title;
+    var topic = inp("tiTopic", { maxlength: "80", placeholder: "e.g. mountain biking", value: d.topic });
+    var kw = inp("tiKw", { maxlength: "80", placeholder: "e.g. beginner bike trail", value: d.keyword });
+    var aud = inp("tiAud", { maxlength: "60", placeholder: "e.g. new riders", value: d.audience });
+    var lang = sel("tiLang", LANGS), fmt = sel("tiFmt", FMTS);
+    var title = inp("tiTitle", { maxlength: "100", placeholder: "Your video title", value: d.title });
+    var desc = ta("tiDesc", { maxlength: "5000", placeholder: "Your video description", value: d.description });
+    var tc = h("div", { class: "counter" }), dc = h("div", { class: "counter" });
+    var sync = function () {
+      S.title = { title: title.value.slice(0, 100), description: desc.value.slice(0, 5000), topic: topic.value.trim(), keyword: kw.value.trim(), audience: aud.value.trim() };
+      counter(tc, title.value.length, 100); counter(dc, desc.value.length, 5000);
+    };
+    [topic, kw, aud, title, desc].forEach(function (el) { el.addEventListener("input", sync); });
+    body.append(panel(h("p", { class: "muted", text: "Title ideas are filled from fixed patterns using your words. Titles are limited to 100 characters. Not AI-generated." }),
+      h("div", { class: "grid2" }, field("Topic", topic), field("Main keyword", kw), field("Audience", aud), field("Language", lang), field("Format", fmt)),
+      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Generate suggestions", onclick: genTitles })),
+      note("tiNote"), h("ol", { id: "tiOut", class: "list" }),
+      field("Your title", title), tc, field("Description (edit freely)", desc), dc,
+      h("div", { class: "row" },
+        h("button", { class: "btn ghost sm", type: "button", text: "Copy title", onclick: function () { copy(title.value.trim(), "Title"); } }),
+        h("button", { class: "btn ghost sm", type: "button", text: "Copy description", onclick: function () { copy(desc.value.trim(), "Description"); } }),
+        h("button", { class: "btn ghost sm", type: "button", text: "Save draft to projects", onclick: function () {
+          if (!title.value.trim() && !desc.value.trim()) { toast("Write a title or description first.", true); return; }
+          saveProject("title", title.value.trim().slice(0, 40) || "Title draft", { title: title.value.trim(), description: desc.value, topic: topic.value.trim(), keyword: kw.value.trim(), audience: aud.value.trim() });
+        } }))));
+    sync();
+  }
+  function genTitles() {
+    var topic = $("tiTopic").value.trim(), kw = $("tiKw").value.trim();
+    if (!topic && !kw) { setNote("tiNote", "Type a topic or a keyword first.", "err"); return; }
+    var short = $("tiFmt").value === "shorts";
+    var v = { n: topic || kw, k: kw || topic, a: $("tiAud").value.trim() || "beginners", d: short ? "under a minute" : "one video" };
+    var items = TITLE_T.map(function (t) { return clip(fill(t, v), 100); });
+    $("tiOut").replaceChildren.apply($("tiOut"), items.map(function (t) {
+      return h("li", {}, h("div", {}, h("div", { text: t }), h("div", { class: "small", text: t.length + " / 100 characters" })),
+        h("button", { class: "btn ghost sm", type: "button", text: "Use", onclick: function () { var ti = $("tiTitle"); ti.value = t; ti.dispatchEvent(new Event("input")); } }));
+    }));
+    var d = $("tiDesc"); d.value = fill(DESC_T, { k: v.k, a: v.a }).slice(0, 5000); d.dispatchEvent(new Event("input"));
+    setNote("tiNote", "Template suggestions and a description draft. Edit before you publish. Not AI-generated." + langNote($("tiLang").value), "");
+  }
+
+  /* 7. Channel Audit (link check + your checklist) */
+  function audit(body) {
+    var u = inp("auUrl", { maxlength: "120", placeholder: "@yourchannel" });
+    var nm = inp("auName", { maxlength: "80", placeholder: "Your channel name" });
+    var fq = sel("auFreq", FREQ);
+    var checks = AUDIT.map(function (text, i) {
+      var cb = h("input", { id: "au" + i, type: "checkbox" });
+      cb.addEventListener("change", score);
+      return h("label", { for: "au" + i }, cb, h("span", { text: text }));
+    });
+    body.append(panel(h("p", { class: "muted", text: "Enter a channel link or @handle. It is checked on this device only. Public channel data needs a YouTube Data API. Analytics need owner sign-in." }),
+      field("Channel link or @handle", u),
+      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Check link", onclick: function () { checkChan(u.value); } })),
+      note("auNote"),
+      h("div", { id: "auOut", hidden: true },
+        h("ul", { class: "list mt" },
+          h("li", {}, h("div", {}, h("strong", { text: "Public channel data" }), h("div", { class: "small", text: "Name, subscribers, video count and recent uploads." })), badge(["api", "Needs API"])),
+          h("li", {}, h("div", {}, h("strong", { text: "Channel analytics" }), h("div", { class: "small", text: "Retention, click-through and traffic. Owner sign-in only." })), badge(["api", "Owner only"]))),
+        h("div", { class: "grid2" }, field("Channel name (your note)", nm), field("Upload frequency", fq)),
+        h("h3", { class: "mt", text: "Your checklist" }), h("div", { class: "checklist" }, checks),
+        h("p", { id: "auScore", class: "small mt" }))));
+    score();
+  }
+  function checkChan(v) {
+    v = String(v).trim();
+    var ok = /^@[\w.-]{3,30}$/.test(v) || /^(?:https?:\/\/)?(?:www\.|m\.)?youtube\.com\/(?:@[\w.-]{3,30}|channel\/UC[\w-]{22}|c\/[\w.-]+|user\/[\w.-]+)\/?(?:[?#].*)?$/.test(v);
+    if (!ok) { setNote("auNote", "Enter a link like youtube.com/@yourchannel or @yourchannel.", "err"); $("auOut").hidden = true; return; }
+    setNote("auNote", "Valid channel link. Public channel data is not connected, so none is shown.", "ok");
+    $("auOut").hidden = false;
+  }
+  function score() {
+    var boxes = document.querySelectorAll(".checklist input[type=checkbox]"), el = $("auScore");
+    var n = Array.prototype.filter.call(boxes, function (b) { return b.checked; }).length;
+    if (el) el.textContent = n + " of " + boxes.length + " items ticked. This is your own check, not a score.";
+  }
+
+  /* 8. Competitor Research (your entries) */
+  function compete(body) {
+    var nm = inp("cpName", { maxlength: "80" }), lk = inp("cpLink", { maxlength: "120", placeholder: "@channel (optional)" });
+    var sb = inp("cpSubs", { maxlength: "20" }), tp = inp("cpTopic", { maxlength: "80" });
+    var fq = sel("cpFreq", FREQ), nt = ta("cpNotes", { maxlength: "300" });
+    body.append(
+      panel(h("p", { class: "muted", text: "Track competitors you research yourself. Every number is what you typed. Nothing is fetched from YouTube." }),
+        h("div", { class: "grid2" }, field("Competitor name", nm), field("Channel link or @handle (optional)", lk), field("Subscribers (your note)", sb), field("Main topic", tp), field("Upload frequency", fq)),
+        field("Notes", nt),
+        h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Add competitor", onclick: function () { addComp(nm, lk, sb, tp, fq, nt); } })),
+        note("cpNote")),
+      panel(h("h3", { text: "Your competitor list" }), h("div", { id: "cpList", class: "list" })));
+    paintComp();
+  }
+  function addComp(nm, lk, sb, tp, fq, nt) {
+    var name = nm.value.trim();
+    if (!name) { setNote("cpNote", "Enter a competitor name.", "err"); return; }
+    var link = lk.value.trim(), chan = "";
+    if (link) {
+      var m = link.match(/^(?:https?:\/\/)?(?:www\.|m\.)?youtube\.com\/(@[\w.-]{3,30})\/?(?:[?#].*)?$/) || link.match(/^(@[\w.-]{3,30})$/);
+      if (!m) { setNote("cpNote", "That channel link does not look valid. Use youtube.com/@name or @name, or leave it empty.", "err"); return; }
+      chan = m[1];
+    }
+    if (S.data.competitors.length >= 30) { setNote("cpNote", "Limit of 30 entries reached. Remove one first.", "err"); return; }
+    var e = { id: uid(), name: name.slice(0, 80), channel: chan, subs: sb.value.trim().slice(0, 20), topic: tp.value.trim().slice(0, 80), freq: fq.value, notes: nt.value.trim().slice(0, 300), added: new Date().toISOString() };
+    if (commit(function (d) { d.competitors.unshift(e); })) { [nm, lk, sb, tp, nt].forEach(function (x) { x.value = ""; }); setNote("cpNote", "Added. Source: entered by you.", "ok"); paintComp(); }
+  }
+  function paintComp() {
+    var b = $("cpList"); if (!b) return;
+    if (!S.data.competitors.length) { b.replaceChildren(h("div", { class: "empty" }, h("p", { class: "small", text: "No competitors added yet." }))); return; }
+    b.replaceChildren.apply(b, S.data.competitors.map(function (c) {
+      return h("li", {}, h("div", {}, h("strong", { text: c.name }), h("div", { class: "small", text: "Source: entered by you" }),
+          c.channel ? h("div", { class: "small", text: c.channel }) : null,
+          h("div", { class: "small", text: "Subscribers (your note): " + (c.subs || "not entered") + " · Topic: " + (c.topic || "not entered") + " · Uploads: " + (c.freq || "not entered") }),
+          c.notes ? h("div", { class: "small", text: "Notes: " + c.notes }) : null),
+        h("button", { class: "btn danger sm", type: "button", text: "Remove", onclick: function () {
+          if (!window.confirm("Remove this entry?")) return;
+          commit(function (d) { d.competitors = d.competitors.filter(function (x) { return x.id !== c.id; }); }); paintComp();
+        } }));
+    }));
+  }
+
+  /* 9. Hook & Script Lab (template) */
+  function hooks(body) {
+    var r = S.hook;
+    var topic = inp("hkTopic", { maxlength: "100", placeholder: "e.g. fixing a flat bike tyre", value: r ? r.topic : "" });
+    var aud = inp("hkAud", { maxlength: "60", placeholder: "e.g. weekend riders", value: r ? r.audience : "" });
+    var lang = sel("hkLang", LANGS, r ? r.language : "English");
+    var dur = sel("hkDur", DURS.map(function (x) { return [String(x[0]), x[1]]; }), "60");
+    var hk = h("ol", { id: "hkHooks", class: "list" }), sc = h("ol", { id: "hkScript", class: "list" });
+    body.append(panel(h("p", { class: "muted", text: "Hooks and the outline use fixed patterns filled with your words. Edit the results before you record. Not AI-generated." }),
+      h("div", { class: "grid2" }, field("Video topic", topic), field("Audience", aud), field("Language", lang), field("Target duration", dur)),
+      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Generate hooks & outline", onclick: genHooks })),
+      note("hkNote"), h("h3", { class: "mt", text: "Hook options" }), hk, h("h3", { class: "mt", text: "Script outline (timed)" }), sc,
+      h("div", { class: "row" },
+        h("button", { id: "hkCopy", class: "btn ghost sm", type: "button", disabled: !r, text: "Copy outline", onclick: function () { copy(S.hook ? S.hook.lines.join("\n") : "", "Outline"); } }),
+        h("button", { id: "hkSave", class: "btn ghost sm", type: "button", disabled: !r, text: "Save to projects", onclick: function () { if (S.hook) saveProject("script", (S.hook.topic || "Video") + " script", S.hook); } }))));
+    if (r) { fillList(hk, r.hooks); fillList(sc, r.lines); }
+  }
+  function genHooks() {
+    var t = $("hkTopic").value.trim();
+    if (!t) { setNote("hkNote", "Type a video topic first.", "err"); return; }
+    var a = $("hkAud").value.trim() || "viewers", lang = $("hkLang").value, secs = ci($("hkDur").value, 15, 3600, 60);
+    var d = secs <= 60 ? "under a minute" : Math.round(secs / 60) + " minutes", v = { k: t, a: a, d: d };
+    var hooksOut = HOOK_T.map(function (x) { return fill(x, v); }), acc = 0;
+    var lines = PARTS.map(function (p) { var s = Math.round(secs * acc / 100); acc += p[1]; var e = Math.round(secs * acc / 100); return fmtT(s) + "–" + fmtT(e) + "  " + p[0] + ": " + fill(p[2], v); });
+    S.hook = { topic: t, audience: a, language: lang, hooks: hooksOut, lines: lines };
+    fillList($("hkHooks"), hooksOut); fillList($("hkScript"), lines);
+    $("hkSave").disabled = false; $("hkCopy").disabled = false;
+    setNote("hkNote", "Template hooks and outline built from your words. Not AI-generated." + langNote(lang), "");
+  }
+
+  /* 10. Creator Growth Planner (tasks, saved on device) */
+  function growth(body) {
+    var nt = inp("tkText", { maxlength: "140", placeholder: "e.g. Script next Shorts idea", "aria-label": "New task" });
+    var box = h("ul", { id: "tkList", class: "list" });
+    body.append(panel(h("p", { class: "muted", text: "Create planning tasks, tick them off, and delete the ones you no longer need. Progress counts only your own ticks." }),
+      field("New task", nt),
+      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Add task", onclick: function () { addTask(nt); } })),
+      note("tkNote"), h("p", { id: "tkStats", class: "small mt" }), box));
+    paintTasks();
+  }
+  function addTask(nt) {
+    var text = nt.value.trim();
+    if (!text) { setNote("tkNote", "Type a task first.", "err"); return; }
+    if (S.data.tasks.length >= 200) { setNote("tkNote", "Limit of 200 tasks reached. Delete some first.", "err"); return; }
+    var e = { id: uid(), text: text.slice(0, 140), done: false, created: new Date().toISOString() };
+    if (commit(function (d) { d.tasks.unshift(e); })) { nt.value = ""; setNote("tkNote", "Task added.", "ok"); paintTasks(); }
+  }
+  function paintTasks() {
+    var box = $("tkList"), st = $("tkStats"); if (!box || !st) return;
+    var done = S.data.tasks.filter(function (t) { return t.done; }).length;
+    st.textContent = done + " of " + S.data.tasks.length + " tasks done.";
+    if (!S.data.tasks.length) { box.replaceChildren(h("li", {}, h("span", { class: "small", text: "No tasks yet. Add your first one above." }))); return; }
+    box.replaceChildren.apply(box, S.data.tasks.map(function (t) {
+      var cb = h("input", { type: "checkbox", checked: t.done, "aria-label": "Mark done: " + t.text });
+      cb.addEventListener("change", function () { commit(function (d) { var x = d.tasks.find(function (y) { return y.id === t.id; }); if (x) x.done = cb.checked; }); paintTasks(); });
+      return h("li", { class: "task" + (t.done ? " done" : "") }, h("label", {}, cb, h("span", { text: t.text })),
+        h("button", { class: "btn danger sm", type: "button", text: "Delete", onclick: function () { commit(function (d) { d.tasks = d.tasks.filter(function (y) { return y.id !== t.id; }); }); paintTasks(); } }));
+    }));
+  }
+
+  var R = { ideas: ideas, trends: trends, thumbs: thumbs, analyzer: analyzer, seo: seo, titles: titles, audit: audit, compete: compete, hooks: hooks, growth: growth };
+
+  /* ---------- wiring & start ---------- */
+  function bind() {
+    var tb = $("themeBtn"); if (tb) tb.addEventListener("click", toggleTheme);
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && route().view === "tool") goBack(); });
+    window.addEventListener("hashchange", function () {
+      if (S.back) { S.back = false; S.depth = Math.max(0, S.depth - 1); } else { S.depth += 1; }
+      render();
+    });
+  }
+  applyTheme(sGet(TK) !== "dark");
+  var sm = sGet(MK);
+  var reduce = false;
+  try { reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+  applyMotion(sm === "1" || (sm !== "0" && reduce));
+  bind();
+  render();
+})();
 </script>
 </body>
 </html>
