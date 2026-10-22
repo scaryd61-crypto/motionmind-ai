@@ -51,15 +51,19 @@ svg.ui,.theme-btn svg,.nav-item svg,.bottom svg,.btn svg,.back svg,.search svg{w
 .empty{padding:18px;border-radius:18px;border:1.5px dashed var(--line);color:var(--muted);display:grid;gap:8px;justify-items:start}.empty strong{color:var(--text)}
 .tool-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:2px 0 12px}.tool-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.tool-title h1{font-size:22px}
 .back{display:inline-flex;align-items:center;gap:6px;min-height:42px;padding:8px 14px 8px 8px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-weight:700;cursor:pointer}
+.guide{margin:0 0 12px;padding:12px 14px;border-radius:18px;background:var(--surf);border:1px solid var(--line)}
+.guide summary{cursor:pointer;font-weight:800;color:var(--acc);min-height:32px;display:flex;align-items:center}
+.step{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;padding:8px 0;font-size:14px;border-top:1px solid var(--line)}.step strong{color:var(--acc)}
 label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin:0 0 6px}.field{margin-top:12px}
 input,select,textarea{width:100%;min-height:46px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--bg2);color:var(--text);font-size:16px}textarea{min-height:110px;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 4px rgba(128,27,58,.14)}
-input[type=checkbox]{width:20px;height:20px;min-height:0;padding:0;accent-color:var(--acc);flex:none}input[type=color]{padding:4px;height:46px;cursor:pointer}input[type=range]{min-height:32px;padding:0;accent-color:var(--acc)}
+input[type=checkbox]{width:20px;height:20px;min-height:0;padding:0;accent-color:var(--acc);flex:none}input[type=color]{padding:4px;height:46px;cursor:pointer}input[type=range]{min-height:32px;padding:0;accent-color:var(--acc)}input[type=file]{padding:8px}
 .grid2{display:grid;gap:0 12px;grid-template-columns:minmax(0,1fr)}@media(min-width:600px){.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:12px}.row.tight{margin-top:0}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 16px;border:0;border-radius:16px;background:var(--grad);color:#FFF7FA;font-weight:700;font-size:15px;cursor:pointer;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 18px -12px rgba(128,27,58,.9);transition:transform .15s ease}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 16px;border:0;border-radius:16px;background:var(--grad);color:#FFF7FA;font-weight:700;font-size:15px;cursor:pointer;text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 10px 18px -12px rgba(128,27,58,.9);transition:transform .15s ease;text-decoration:none}
 .btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--line);box-shadow:none}.btn.danger{background:transparent;color:var(--err);border:1px solid var(--err);box-shadow:none}.btn.sm{min-height:40px;padding:8px 12px;font-size:14px;border-radius:14px}
 .notice{margin-top:12px;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:var(--surf);font-size:14px}.notice.err{color:var(--err);border-color:var(--err)}.notice.ok{color:var(--ok);border-color:var(--ok)}
+.ai-out{white-space:pre-wrap;margin-top:12px;padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:var(--surf);font-size:14px;line-height:1.5;overflow-wrap:anywhere}.ai-out.err{color:var(--err);border-color:var(--err)}
 .list{display:grid;gap:8px;margin:10px 0 0;padding:0;list-style:none}.list>li,.list>.item,.list>a{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 14px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);color:var(--text);text-decoration:none;min-width:0;overflow-wrap:anywhere}
 .list>li>div:first-child,.list>.item>div:first-child{flex:1 1 200px;min-width:0}.list>a{flex-direction:column;align-items:flex-start}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;padding:6px 6px 6px 12px;border-radius:999px;background:var(--surf);border:1px solid var(--line);font-size:14px;overflow-wrap:anywhere}.chip.warn{border-color:var(--warn)}.chip button{border:0;background:none;color:var(--acc);cursor:pointer;font-size:18px;min-width:32px;min-height:32px}
@@ -132,10 +136,12 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
 (function () {
   "use strict";
   var KEY = "mm-studio-v4", TK = "mm-theme", MK = "mm-motion", SVG = "http://www.w3.org/2000/svg";
+  var API = "https://motionmind-backend.onrender.com";
   var LANGS = ["English", "Spanish", "French", "German", "Portuguese", "Hindi", "Japanese"];
   var DURS = [[30, "30 seconds"], [60, "1 minute"], [120, "2 minutes"], [300, "5 minutes"], [600, "10 minutes"]];
   var FMTS = [["shorts", "YouTube Shorts (vertical)"], ["long", "Long-form video"]];
   var LAY = [["left", "Text left"], ["center", "Centred"], ["bar", "Bottom bar"]];
+  var TONES = [["friendly", "Friendly"], ["serious", "Serious"], ["excited", "Excited"], ["calm", "Calm"]];
   var FREQ = ["Weekly", "2–3 per month", "Monthly", "Irregular"];
   var CATS = [["all", "All"], ["create", "Create"], ["seo", "Thumbnails & SEO"], ["research", "Research"], ["plan", "Planning"]];
   var TYPE = { thumb: "Thumbnail design", idea: "Idea list", script: "Hook & script", title: "Title & description" };
@@ -143,10 +149,10 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
   var TOOLS = [
     { id: "ideas", name: "Video Idea Generator", short: "Idea Generator", cat: "create", icon: "i-bulb", tone: "t-mint", featured: true, st: ["tpl", "Template · not AI"], desc: "Structured video ideas from your niche and audience." },
     { id: "trends", name: "Trending Topics", short: "Trending Topics", cat: "research", icon: "i-trend", tone: "t-blue", featured: false, st: ["api", "Needs API"], desc: "Log topics you see yourself. Live trends need a YouTube API." },
-    { id: "thumbs", name: "AI Thumbnail Maker", short: "Thumbnail Maker", cat: "seo", icon: "i-thumb", tone: "t-peach", featured: true, st: ["ok", "Works now"], desc: "Design a 16:9 thumbnail and download a PNG." },
+    { id: "thumbs", name: "AI Thumbnail Maker", short: "Thumbnail Maker", cat: "seo", icon: "i-thumb", tone: "t-peach", featured: true, st: ["ok", "Works now"], desc: "Build a thumbnail from a prompt or your text, add your photo, download PNG." },
     { id: "analyzer", name: "Video Analyzer", short: "Video Analyzer", cat: "research", icon: "i-eye", tone: "t-rose", featured: false, st: ["api", "Needs API"], desc: "Checks a YouTube link. Analysis needs a connected API." },
     { id: "seo", name: "SEO Keywords & Tags", short: "SEO Tags", cat: "seo", icon: "i-tag", tone: "t-mint", featured: true, st: ["ok", "Works now"], desc: "Clean, de-duplicate and organise your keywords." },
-    { id: "titles", name: "Title & Description", short: "Titles", cat: "create", icon: "i-pen", tone: "t-peach", featured: false, st: ["tpl", "Template · not AI"], desc: "Editable title and description templates." },
+    { id: "titles", name: "Title & Description", short: "Titles", cat: "create", icon: "i-pen", tone: "t-peach", featured: false, st: ["tpl", "Template · not AI"], desc: "Titles, description, hashtags and keywords from your topic." },
     { id: "audit", name: "Channel Audit", short: "Channel Audit", cat: "research", icon: "i-audit", tone: "t-blue", featured: false, st: ["api", "Needs API"], desc: "Your checklist. Public channel data needs a YouTube API." },
     { id: "compete", name: "Competitor Research", short: "Competitors", cat: "research", icon: "i-compete", tone: "t-rose", featured: false, st: ["user", "Your entries"], desc: "Track competitors you research yourself." },
     { id: "hooks", name: "Hook & Script Lab", short: "Hook & Script", cat: "create", icon: "i-hook", tone: "t-blue", featured: true, st: ["tpl", "Template · not AI"], desc: "Hook options and a timed script outline." },
@@ -155,16 +161,26 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
   ];
   var BY = {};
   TOOLS.forEach(function (t) { BY[t.id] = t; t.href = t.id === "projects" ? "#/projects" : "#/tool/" + t.id; });
+
   var IDEA_T = ["5 mistakes beginners make with {k} (and how to fix them)", "I tried {k} for 7 days: honest results", "Beginner's guide to {k} in {n}", "The truth about {k} for {a}", "{k} step by step for {a}", "Myths about {k} that waste time", "Before and after: {k} in {n}", "Answering the top questions about {k}"];
-  var TITLE_T = ["{k} for {a}: what actually works", "How to {k} in {n} (beginner friendly)", "{k} explained in {d}", "I tested {k} so you do not have to", "Stop doing this with {k}"];
-  var DESC_T = "In this video I cover {k} for {a}.\n\nWhat you will learn:\n- \n- \n\nTimestamps:\n00:00 Intro\n\nKeywords: {k}";
+  var TITLE_STYLES = [
+    ["How-to", ["How to {k} in {n}: a simple step-by-step guide", "How to {k} for {a}, even if you are just starting"]],
+    ["List", ["5 {k} tips that help {a}", "7 common {k} mistakes and how to avoid them"]],
+    ["Question", ["Is {k} worth it for {a}?", "Can {a} really get better at {k} in one month?"]],
+    ["Curiosity", ["The {k} detail most people miss", "What happens when you try {k} for 7 days"]],
+    ["Honest review", ["Honest review: {k} after real testing", "I tested {k} so you do not have to"]]
+  ];
+  var CTA = { friendly: "If this helped, tell me in the comments what you want to see next.", serious: "Subscribe for more practical guides.", excited: "Hit subscribe and turn on notifications so you never miss the next one!", calm: "If you want more like this, you can subscribe and watch the next video." };
+  var DESC2 = "In this video I explain {k} for {a}.\n\nWhat you will learn:\n- The basics of {k}\n- Common mistakes to avoid\n- A simple plan you can follow\n\nTimestamps:\n00:00 Intro\n\n{cta}";
   var HOOK_T = ["Most people get {k} wrong. Here is the fix.", "In the next {d}, you will learn {k} without the jargon.", "If you are {a} and want results with {k}, watch this first."];
   var PARTS = [["Hook", 8, "Say the promise about {k} in one sentence."], ["Problem", 12, "Describe the problem {a} face with {k}."], ["Point 1", 20, "One practical step about {k}."], ["Point 2", 20, "A second step, with one example."], ["Point 3", 20, "A third step or a common mistake to avoid."], ["Proof or example", 10, "Show one real example you can verify."], ["Call to action", 10, "Ask one specific question or action."]];
   var AUDIT = ["Titles say clearly what the video is about", "Thumbnails have readable text and one clear subject", "Descriptions have a summary and useful links", "Uploads follow a schedule you can keep", "Related videos are grouped in playlists", "End screens or cards point to another video"];
+  var STOP = { the: 1, and: 1, for: 1, with: 1, how: 1, what: 1, your: 1, you: 1, this: 1, that: 1, from: 1, are: 1, was: 1, not: 1, but: 1, can: 1, all: 1, into: 1, about: 1, best: 1, make: 1, using: 1 };
+  var COLOURS = { red: "#C0182B", blue: "#1D4E89", green: "#1E7A4C", black: "#111111", purple: "#5B2A86", orange: "#E8741E", yellow: "#F2C230", pink: "#D9467A", brown: "#6B4226", navy: "#14213D" };
 
-  var S = { data: load(), cat: "all", query: "", pending: null, depth: 0, back: false, motionOff: false, idea: null, hook: null, seo: "", tt: null,
-    title: { title: "", description: "", topic: "", keyword: "", audience: "" },
-    thumb: { head: "", sub: "", bg: "#801B3A", fg: "#FFF7FA", layout: "left", size: 96 } };
+  var S = { data: load(), cat: "all", query: "", pending: null, depth: 0, back: false, motionOff: false, idea: null, hook: null, seo: "", tt: null, img: null,
+    title: { topic: "", audience: "", tone: "friendly", lang: "English", fmt: "long", titles: [], description: "", hashtags: "", keywords: "" },
+    thumb: { head: "", sub: "", bg: "#801B3A", fg: "#FFF7FA", layout: "left", size: 96, shade: true, prompt: "" } };
 
   /* ---------- storage (never throws) ---------- */
   function sGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -224,15 +240,47 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
   function note(id) { return h("div", { id: id, class: "notice", hidden: true }); }
   function setNote(id, msg, kind) { var n = $(id); if (!n) return; n.textContent = msg; n.className = "notice" + (kind ? " " + kind : ""); n.hidden = !msg; }
   function fillList(ol, items) { ol.replaceChildren.apply(ol, items.map(function (t) { return h("li", {}, h("span", { text: t })); })); }
-  function counter(el, n, max) { el.textContent = n + " / " + max; el.classList.toggle("over", n > max); }
+  function guide(steps) {
+    return h("details", { class: "guide", open: true }, h("summary", { text: "How to use this tool" }),
+      steps.map(function (s, i) { return h("div", { class: "step" }, h("strong", { text: "Step " + (i + 1) }), h("span", { text: s })); }));
+  }
   function toast(msg, err) {
     var t = $("toast"); if (!t) return;
     t.textContent = msg; t.className = "toast show" + (err ? " err" : "");
     clearTimeout(S.tt); S.tt = setTimeout(function () { t.classList.remove("show"); }, 2800);
   }
 
+  /* ---------- AI (calls the MotionMind backend, never a key) ---------- */
+  function askAI(task, text) {
+    return fetch(API + "/ai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ task: task, text: text })
+    }).then(function (r) {
+      return r.json().catch(function () { return { success: false, error: "The server sent an unexpected reply." }; });
+    }).catch(function () {
+      return { success: false, error: "Could not reach the AI server. The free server may be waking up. Wait 1 minute and try again." };
+    });
+  }
+  function aiPanel(task, getText, label) {
+    var out = h("div", { class: "ai-out", hidden: true, "aria-live": "polite" });
+    var btn = h("button", { class: "btn", type: "button", text: label });
+    btn.addEventListener("click", function () {
+      var t = String(getText() || "").trim();
+      out.hidden = false;
+      if (!t) { out.className = "ai-out err"; out.textContent = "Type some text in the boxes above first."; return; }
+      btn.disabled = true; out.className = "ai-out"; out.textContent = "Working... The first try can take up to a minute.";
+      askAI(task, t).then(function (r) {
+        btn.disabled = false;
+        if (r && r.success && r.text) { out.className = "ai-out"; out.textContent = r.text; }
+        else { out.className = "ai-out err"; out.textContent = (r && r.error) || "Something went wrong. Try again."; }
+      });
+    });
+    return { btn: btn, out: out };
+  }
+
   /* ---------- text helpers ---------- */
-  function fill(t, v) { return t.replace(/\{(\w)\}/g, function (_, c) { return v[c] || ""; }); }
+  function fill(t, v) { return t.replace(/\{(\w+)\}/g, function (_, c) { return v[c] || ""; }); }
   function clip(s, max) { if (s.length <= max) return s; var c = s.slice(0, max), i = c.lastIndexOf(" "); return (i > 20 ? c.slice(0, i) : c).trim(); }
   function fmtT(s) { return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }
   function langNote(l) { return l !== "English" ? " Template text is English only. Other languages need an AI service, which is not connected." : ""; }
@@ -242,6 +290,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
   function strArr(a, n, len) { return arr(a).filter(function (x) { return typeof x === "string"; }).slice(0, n).map(function (x) { return x.slice(0, len); }); }
   function hex(v, d) { return typeof v === "string" && /^#[0-9a-fA-F]{6}$/.test(v) ? v : d; }
   function ci(v, a, b, d) { var n = parseInt(v, 10); return isFinite(n) ? Math.min(b, Math.max(a, n)) : d; }
+  function wordsOf(t) { return String(t).toLowerCase().split(/[^a-z0-9\u00C0-\uFFFF]+/).filter(function (w) { return w.length > 2 && !STOP[w]; }); }
   function copy(text, label) {
     if (!text) { toast("Nothing to copy yet.", true); return; }
     var ok = function () { toast(label + " copied."); }, bad = function () { toast("Copy is not available here. Select the text and copy it.", true); };
@@ -426,7 +475,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
         h("div", { class: "row" },
           h("button", { class: "btn ghost sm", type: "button", onclick: exportAll, text: "Export all data (JSON)" }),
           h("button", { class: "btn danger sm", type: "button", onclick: clearAll, text: "Clear all saved data" }))),
-      panel(h("h3", { text: "About" }), h("p", { class: "muted", text: "MotionMind AI is an early-access creator toolkit. This page makes no network requests. Tools labelled Needs API are not connected to live YouTube data yet." })));
+      panel(h("h3", { text: "Privacy and AI" }), h("p", { class: "muted", text: "Template tools run only in this browser. AI buttons send only the text you type to the MotionMind AI server, which forwards it to a free AI service. Photos you upload to the thumbnail maker never leave your device. No account is used. Tools labelled Needs API are not connected to live YouTube data yet." })));
   }
   function clearAll() {
     if (!window.confirm("Clear all saved projects, topics, competitor notes and tasks on this device? This cannot be undone.")) return;
@@ -448,11 +497,11 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     if (!d || typeof d !== "object") return;
     if (id === "ideas") S.idea = { niche: str(d.niche, 60), audience: str(d.audience, 60), keyword: str(d.keyword, 80), language: str(d.language, 20), ideas: strArr(d.ideas, 20, 200) };
     if (id === "hooks") S.hook = { topic: str(d.topic, 100), audience: str(d.audience, 60), language: str(d.language, 20), hooks: strArr(d.hooks, 10, 300), lines: strArr(d.lines, 20, 400) };
-    if (id === "titles") S.title = { title: str(d.title, 100), description: str(d.description, 5000), topic: str(d.topic, 80), keyword: str(d.keyword, 80), audience: str(d.audience, 60) };
-    if (id === "thumbs") S.thumb = { head: str(d.head, 40), sub: str(d.sub, 60), bg: hex(d.bg, "#801B3A"), fg: hex(d.fg, "#FFF7FA"), layout: LAY.some(function (x) { return x[0] === d.layout; }) ? d.layout : "left", size: ci(d.size, 48, 140, 96) };
+    if (id === "titles") S.title = { topic: str(d.topic, 100), audience: str(d.audience, 80), tone: str(d.tone, 20) || "friendly", lang: str(d.lang, 20) || "English", fmt: str(d.fmt, 10) || "long", titles: strArr(d.titles, 12, 100), description: str(d.description, 2000), hashtags: str(d.hashtags, 800), keywords: str(d.keywords, 1000) };
+    if (id === "thumbs") S.thumb = { head: str(d.head, 5000), sub: str(d.sub, 5000), bg: hex(d.bg, "#801B3A"), fg: hex(d.fg, "#FFF7FA"), layout: LAY.some(function (x) { return x[0] === d.layout; }) ? d.layout : "left", size: ci(d.size, 48, 140, 96), shade: d.shade !== false, prompt: str(d.prompt, 2000) };
   }
 
-  /* 1. Video Idea Generator (template engine) */
+  /* 1. Video Idea Generator (template engine + AI) */
   function ideas(body) {
     var r = S.idea;
     var n = inp("ideaNiche", { placeholder: "e.g. home cooking", maxlength: "60", value: r ? r.niche : "" });
@@ -461,8 +510,9 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     var lang = sel("ideaLang", LANGS, r ? r.language : "English");
     var fmt = sel("ideaFmt", FMTS);
     var out = h("ol", { id: "ideaOut", class: "list" });
+    body.append(guide(["Type a niche (what your channel is about).", "Add your audience and keyword if you have them.", "Press Generate ideas for quick template ideas, or Get AI video ideas for AI ideas.", "Press Copy list or Save to projects to keep them."]));
     body.append(panel(
-      h("p", { class: "muted", text: "Ideas are built from fixed patterns filled with the words you type. They are not AI-generated." }),
+      h("p", { class: "muted", text: "Template ideas are built from fixed patterns filled with the words you type. They are not AI-generated." }),
       h("div", { class: "grid2" }, field("Niche", n), field("Target audience", a), field("Topic or keyword (optional)", k), field("Language", lang), field("Format", fmt)),
       h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Generate ideas", onclick: genIdeas })),
       note("ideaNote"), out,
@@ -470,6 +520,13 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
         h("button", { id: "ideaCopy", class: "btn ghost sm", type: "button", disabled: !r, text: "Copy list", onclick: function () { copy(S.idea ? S.idea.ideas.join("\n") : "", "Ideas"); } }),
         h("button", { id: "ideaSave", class: "btn ghost sm", type: "button", disabled: !r, text: "Save to projects", onclick: function () { if (S.idea) saveProject("idea", (S.idea.keyword || S.idea.niche || "Video") + " ideas", S.idea); } }))));
     if (r) fillList(out, r.ideas);
+    var ai = aiPanel("ideas", function () {
+      var nv = $("ideaNiche").value.trim(), kv = $("ideaKw").value.trim();
+      if (!nv && !kv) return "";
+      return "Niche: " + nv + "\nTarget audience: " + $("ideaAud").value.trim() + "\nTopic or keyword: " + kv + "\nFormat: " + $("ideaFmt").value + "\nLanguage for the answer: " + $("ideaLang").value;
+    }, "Get AI video ideas");
+    body.append(panel(h("h3", { text: "AI video ideas" }), h("p", { class: "muted", text: "Uses the niche, audience and keyword above. Free AI, so answers can take up to a minute." }),
+      h("div", { class: "row" }, ai.btn), ai.out));
   }
   function genIdeas() {
     var n = $("ideaNiche").value.trim(), a = $("ideaAud").value.trim(), k = $("ideaKw").value.trim();
@@ -517,7 +574,20 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     }));
   }
 
-  /* 3. Thumbnail Maker (canvas, local PNG export) */
+  /* 3. Thumbnail Maker: prompt, manual text (no limit), photo upload, PNG download */
+  function parsePrompt(p) {
+    var out = { head: "", sub: "", bg: null, fg: null, layout: null };
+    var q = (String(p).match(/"[^"]+"|“[^”]+”/g) || []).map(function (s) { return s.slice(1, -1).trim(); });
+    if (q[0]) out.head = q[0];
+    if (q[1]) out.sub = q[1];
+    var lw = String(p).toLowerCase();
+    Object.keys(COLOURS).some(function (c) { if (lw.indexOf(c) >= 0) { out.bg = COLOURS[c]; return true; } return false; });
+    if (/yellow/.test(lw)) out.fg = "#111111";
+    if (/center|centre|middle/.test(lw)) out.layout = "center";
+    else if (/bottom|bar/.test(lw)) out.layout = "bar";
+    else if (/left/.test(lw)) out.layout = "left";
+    return out;
+  }
   function wrap(ctx, text, max) {
     var lines = [], cur = "";
     String(text).split(/\s+/).filter(Boolean).forEach(function (w) {
@@ -527,59 +597,128 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     if (cur) lines.push(cur);
     return lines;
   }
-  function drawThumb(c, t) {
+  function fitLayout(x, head, sub, maxW, maxH, startBig) {
+    var big = startBig, small, hl, sl, total;
+    for (;;) {
+      small = Math.round(big * 0.45);
+      x.font = "900 " + big + "px Arial, Helvetica, sans-serif";
+      hl = wrap(x, head || "Your headline", maxW);
+      x.font = "600 " + small + "px Arial, Helvetica, sans-serif";
+      sl = sub ? wrap(x, sub, maxW) : [];
+      total = hl.length * big * 1.1 + (sl.length ? big * 0.25 + sl.length * small * 1.25 : 0);
+      if (total <= maxH || big <= 24) break;
+      big -= 4;
+    }
+    return { big: big, small: small, hl: hl, sl: sl, total: total };
+  }
+  function drawThumb(c, t, img) {
     var x = c.getContext("2d"), W = c.width, H = c.height;
-    x.save(); x.fillStyle = t.bg; x.fillRect(0, 0, W, H);
-    var g = x.createRadialGradient(W * 0.85, H * 0.1, 40, W * 0.85, H * 0.1, W * 0.8);
-    g.addColorStop(0, "rgba(255,255,255,0.2)"); g.addColorStop(1, "rgba(255,255,255,0)");
-    x.fillStyle = g; x.fillRect(0, 0, W, H);
-    var big = t.size, small = Math.round(t.size * 0.45), max = W - 160;
-    x.font = "900 " + big + "px Arial, Helvetica, sans-serif";
-    var hl = wrap(x, t.head || "Your headline", max);
-    x.font = "600 " + small + "px Arial, Helvetica, sans-serif";
-    var sl = t.sub ? wrap(x, t.sub, max) : [];
-    var gap = sl.length ? big * 0.25 : 0, total = hl.length * big * 1.1 + gap + sl.length * small * 1.25;
-    var bar = t.layout === "bar", bh = 260, center = t.layout === "center";
-    if (bar) { x.fillStyle = "rgba(0,0,0,0.45)"; x.fillRect(0, H - bh, W, bh); }
-    var y = bar ? (H - bh) + (bh - total) / 2 : (H - total) / 2, tx = center ? W / 2 : 80;
+    x.save();
+    x.fillStyle = t.bg; x.fillRect(0, 0, W, H);
+    if (img) {
+      var s = Math.max(W / img.width, H / img.height), dw = img.width * s, dh = img.height * s;
+      x.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+      if (t.shade) { x.fillStyle = "rgba(0,0,0,0.45)"; x.fillRect(0, 0, W, H); }
+    }
+    var center = t.layout === "center", bar = t.layout === "bar";
+    var pad = 70, maxW = (bar || center || !img) ? W - 2 * pad : W * 0.6 - pad;
+    var areaTop = 0, areaH = H;
+    if (bar) { areaTop = H * 0.5; areaH = H * 0.5; x.fillStyle = "rgba(0,0,0,0.55)"; x.fillRect(0, areaTop, W, areaH); }
+    var L = fitLayout(x, t.head, t.sub, maxW, areaH * 0.9, t.size);
+    var y = areaTop + (areaH - L.total) / 2, tx = center ? W / 2 : pad;
     x.textAlign = center ? "center" : "left"; x.textBaseline = "top";
-    x.shadowColor = "rgba(0,0,0,0.45)"; x.shadowBlur = 18; x.shadowOffsetY = 4;
-    x.fillStyle = t.fg; x.font = "900 " + big + "px Arial, Helvetica, sans-serif";
-    hl.forEach(function (l) { x.fillText(l, tx, y); y += big * 1.1; });
-    y += gap; x.font = "600 " + small + "px Arial, Helvetica, sans-serif";
-    sl.forEach(function (l) { x.fillText(l, tx, y); y += small * 1.25; });
+    x.shadowColor = "rgba(0,0,0,0.5)"; x.shadowBlur = 18; x.shadowOffsetY = 4;
+    x.fillStyle = t.fg; x.font = "900 " + L.big + "px Arial, Helvetica, sans-serif";
+    L.hl.forEach(function (l) { x.fillText(l, tx, y); y += L.big * 1.1; });
+    if (L.sl.length) {
+      y += L.big * 0.25; x.font = "600 " + L.small + "px Arial, Helvetica, sans-serif";
+      L.sl.forEach(function (l) { x.fillText(l, tx, y); y += L.small * 1.25; });
+    }
     x.restore();
   }
   function thumbs(body) {
     var t = S.thumb;
-    var head = inp("thHead", { placeholder: "e.g. I tried it for 30 days", maxlength: "40", value: t.head });
-    var sub = inp("thSub", { placeholder: "e.g. Honest results", maxlength: "60", value: t.sub });
+    var prompt = ta("thPrompt", { placeholder: 'e.g. red background, "I tried it for 30 days", "honest results" in bottom bar', value: t.prompt || "" });
+    var head = ta("thHead", { placeholder: "Type as many words as you like", value: t.head });
+    var sub = ta("thSub", { placeholder: "Optional smaller line", value: t.sub });
     var lay = sel("thLayout", LAY, t.layout);
     var size = h("input", { id: "thSize", type: "range", min: "48", max: "140", step: "2", value: String(t.size) });
     var so = h("span", { class: "small" });
     var bg = h("input", { id: "thBg", type: "color", value: t.bg });
     var fg = h("input", { id: "thFg", type: "color", value: t.fg });
+    var shade = h("input", { id: "thShade", type: "checkbox", checked: t.shade !== false });
+    var file = h("input", { id: "thFile", type: "file", accept: "image/*" });
     var cv = h("canvas", { id: "thCanvas", width: "1280", height: "720", role: "img", "aria-label": "Thumbnail preview" });
-    body.append(panel(
-      h("p", { class: "muted", text: "Design a 16:9 thumbnail. It is drawn in your browser, not an AI image. These colours change the thumbnail only, not the website theme." }),
-      h("div", { class: "thumb-grid" },
-        h("div", {}, field("Headline (up to 40 characters)", head), field("Sub-text (up to 60 characters)", sub), field("Layout", lay),
-          h("div", { class: "field" }, h("label", { for: "thSize", text: "Font size" }), size, so),
-          h("div", { class: "grid2" }, field("Background colour", bg), field("Text colour", fg))),
-        h("div", {}, cv, h("p", { class: "small mt", text: "Preview updates as you type. Download gives a 1280 × 720 PNG." }))),
+    var topicIn = inp("thTopic", { placeholder: "e.g. budget cooking for students", maxlength: "100" });
+    var ai = aiPanel("thumbnail", function () { return topicIn.value; }, "Get AI headline ideas");
+
+    body.append(guide([
+      "Option A: write a prompt. Put your headline in quotes, add a colour word like red or blue, and add center, left or bottom bar for layout. Press Build thumbnail from prompt.",
+      "Option B: skip the prompt and type your headline and sub-text directly in step 2. There is no character limit. Long text is made smaller to fit.",
+      "Step 3 (optional): upload your own photo. It stays on your phone.",
+      "Step 4: check the preview, then press Download PNG. Use Save design to keep it in projects."
+    ]));
+    body.append(panel(h("h3", { text: "1. Write a prompt (optional)" }),
+      h("p", { class: "muted", text: "This builds the layout from your words: quoted text, colour words and layout words. It does not draw a new picture. For a picture, use the photo in step 3." }),
+      field("Your prompt", prompt),
+      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Build thumbnail from prompt", onclick: applyPrompt })),
+      note("thNote")));
+    body.append(panel(h("h3", { text: "2. Type your text" }),
+      field("Headline (any length)", head),
+      field("Sub-text (optional, any length)", sub),
+      field("Layout", lay),
+      h("div", { class: "field" }, h("label", { for: "thSize", text: "Font size" }), size, so),
+      h("div", { class: "grid2" }, field("Background colour", bg), field("Text colour", fg)),
+      h("div", { class: "row" }, shade, h("span", { text: "Dark shade behind photo, for easier reading" }))));
+    body.append(panel(h("h3", { text: "3. Add your photo (optional)" }),
+      h("p", { class: "muted", text: "Use your own photo, or a photo of someone who has given you permission. The photo stays on this device and is not uploaded anywhere." }),
+      file,
+      h("div", { class: "row" }, h("button", { class: "btn ghost sm", type: "button", text: "Remove photo", onclick: function () { S.img = null; file.value = ""; sync(); } }))));
+    body.append(panel(h("h3", { text: "4. Preview and download" }),
+      h("div", { class: "thumb-grid" }, h("div", {}, cv), h("div", {}, h("p", { class: "small", text: "Preview is 16:9, the same size as a YouTube thumbnail. Download gives a 1280 × 720 PNG." }))),
       h("div", { class: "row" },
         h("button", { class: "btn", type: "button", text: "Download PNG", onclick: dlThumb }),
         h("button", { class: "btn ghost", type: "button", text: "Save design to projects", onclick: function () {
           if (!S.thumb.head.trim()) { toast("Add a headline before saving.", true); return; }
           saveProject("thumb", S.thumb.head.slice(0, 40), Object.assign({}, S.thumb));
-        } }))));
-    var sync = function () {
-      S.thumb = { head: head.value.slice(0, 40), sub: sub.value.slice(0, 60), bg: hex(bg.value, "#801B3A"), fg: hex(fg.value, "#FFF7FA"),
-        layout: LAY.some(function (x) { return x[0] === lay.value; }) ? lay.value : "left", size: ci(size.value, 48, 140, 96) };
+        } })),
+      h("p", { class: "small mt", text: "Projects save the text and colours. The photo is not saved, so upload it again after opening a project." })));
+    body.append(panel(h("h3", { text: "AI headline ideas" }),
+      h("p", { class: "muted", text: "AI gives text ideas only. Copy any idea into the headline box in step 2." }),
+      field("What is your video about?", topicIn),
+      h("div", { class: "row" }, ai.btn), ai.out));
+
+    function sync() {
+      S.thumb = {
+        head: head.value, sub: sub.value,
+        bg: hex(bg.value, "#801B3A"), fg: hex(fg.value, "#FFF7FA"),
+        layout: LAY.some(function (x) { return x[0] === lay.value; }) ? lay.value : "left",
+        size: ci(size.value, 48, 140, 96), shade: shade.checked, prompt: prompt.value
+      };
       so.textContent = S.thumb.size + " px";
-      drawThumb(cv, S.thumb);
-    };
-    [head, sub, lay, size, bg, fg].forEach(function (el) { el.addEventListener("input", sync); });
+      drawThumb(cv, S.thumb, S.img);
+    }
+    function applyPrompt() {
+      var r = parsePrompt(prompt.value);
+      if (!r.head) { setNote("thNote", 'Put your headline in quotes, for example "I tried it for 30 days".', "err"); return; }
+      head.value = r.head;
+      if (r.sub) sub.value = r.sub;
+      if (r.bg) bg.value = r.bg;
+      if (r.fg) fg.value = r.fg;
+      if (r.layout) lay.value = r.layout;
+      sync();
+      setNote("thNote", "Thumbnail built from your prompt. You can still edit the text in step 2.", "ok");
+    }
+    file.addEventListener("change", function () {
+      var f = file.files && file.files[0];
+      if (!f) return;
+      if (!/^image\//.test(f.type)) { setNote("thNote", "Please choose an image file.", "err"); return; }
+      var im = new Image();
+      im.onload = function () { S.img = im; setNote("thNote", "Photo added. It stays on this device only.", "ok"); sync(); };
+      im.onerror = function () { setNote("thNote", "Could not open that photo. Try another file.", "err"); };
+      im.src = URL.createObjectURL(f);
+    });
+    [head, sub, lay, size, bg, fg, shade].forEach(function (el) { el.addEventListener("input", sync); });
     lay.addEventListener("change", sync);
     sync();
   }
@@ -590,17 +729,32 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     c.toBlob(function (b) { if (!b) { toast("Could not create the PNG.", true); return; } download("thumbnail-" + Date.now() + ".png", b); toast("PNG downloaded."); }, "image/png");
   }
 
-  /* 4. Video Analyzer (link format check only) */
+  /* 4. Video Analyzer (link check + AI feedback on your own text) */
   function parseVid(s) {
     var m = String(s).trim().match(/^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([A-Za-z0-9_-]{11})(?:[&?#\/].*)?$/);
     return m ? m[1] : null;
   }
   function analyzer(body) {
     var u = inp("anUrl", { type: "url", placeholder: "https://www.youtube.com/watch?v=...", maxlength: "200" });
+    body.append(guide(["Paste a YouTube link and press Check link. This only checks the link format.", "For feedback, paste your own title, keyword, description and opening words.", "Press Get AI feedback and read the advice.", "Edit your text and try again before you upload."]));
     body.append(panel(h("p", { class: "muted", text: "Paste a YouTube video link. It is checked on this device only. Nothing is fetched from YouTube." }),
       field("YouTube video link", u),
       h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Check link", onclick: function () { checkVid(u.value); } })),
       note("anNote"), h("div", { id: "anOut", hidden: true })));
+
+    var aTitle = inp("anTitle", { maxlength: "100", placeholder: "Your video title" });
+    var aKw = inp("anKw", { maxlength: "80", placeholder: "e.g. bike maintenance" });
+    var aDesc = ta("anDesc", { maxlength: "2000", placeholder: "Paste your video description" });
+    var aHook = ta("anHook", { maxlength: "600", placeholder: "The first 2 or 3 sentences of your video" });
+    var ai = aiPanel("analyze", function () {
+      var t = aTitle.value.trim(), d = aDesc.value.trim(), hk = aHook.value.trim();
+      if (!t && !d && !hk) return "";
+      return "Title: " + t + "\nMain keyword: " + aKw.value.trim() + "\nDescription: " + d + "\nOpening words: " + hk;
+    }, "Get AI feedback");
+    body.append(panel(h("h3", { text: "AI feedback on your text" }),
+      h("p", { class: "muted", text: "Paste your own title, description and opening words. AI checks the hook, title clarity, keyword use and gives improvements. It cannot see the video itself, your views or your retention." }),
+      field("Title", aTitle), field("Main keyword", aKw), field("Description", aDesc), field("Opening words (hook)", aHook),
+      h("div", { class: "row" }, ai.btn), ai.out));
   }
   function checkVid(v) {
     var id = parseVid(v), out = $("anOut");
@@ -625,6 +779,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
   }
   function seo(body) {
     var t = ta("seoIn", { maxlength: "1500", placeholder: "e.g. bike ride, mountain roads, sunset cinematic", value: S.seo });
+    body.append(guide(["Type your keywords, separated by commas or new lines.", "Press Clean up to remove duplicates. Use Sort A–Z if you like.", "Tags with a yellow border are longer than 30 characters. Shorten them.", "Press Copy tags and paste them into your upload page."]));
     body.append(panel(h("p", { class: "muted", text: "Enter keywords separated by commas or new lines. Duplicates are removed. Tags over 30 characters are flagged. Search volume is not shown, because no keyword data is connected." }),
       field("Your keywords and tags", t),
       h("div", { class: "row" },
@@ -649,47 +804,92 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     st.textContent = r.list.length + " unique · about " + r.list.join(",").length + " characters" + (r.dup ? " · " + r.dup + " duplicate(s) removed" : "") + ".";
   }
 
-  /* 6. Title & Description (template) */
+  /* 6. Title, Description, Hashtags and Keywords (template, from topic and audience) */
+  function makeTags(topic, aud, fmt) {
+    var tags = [];
+    var push = function (s) {
+      s = String(s).toLowerCase().replace(/[^a-z0-9\u00C0-\uFFFF]/g, "");
+      if (s && tags.indexOf("#" + s) < 0 && tags.length < 15) tags.push("#" + s);
+    };
+    push(String(topic).replace(/\s+/g, ""));
+    wordsOf(topic).slice(0, 8).forEach(push);
+    wordsOf(aud).slice(0, 2).forEach(push);
+    push("youtube");
+    push(fmt === "shorts" ? "shorts" : "video");
+    return tags.join(" ");
+  }
+  function makeKeys(topic, aud) {
+    var list = [];
+    var add = function (s) { s = String(s).trim(); if (s && list.indexOf(s) < 0 && list.length < 20) list.push(s); };
+    var w = wordsOf(topic);
+    add(String(topic).toLowerCase());
+    w.forEach(add);
+    for (var i = 0; i < w.length - 1; i++) add(w[i] + " " + w[i + 1]);
+    if (aud) add(String(aud).toLowerCase());
+    wordsOf(aud).forEach(add);
+    return list.join(", ");
+  }
   function titles(body) {
     var d = S.title;
-    var topic = inp("tiTopic", { maxlength: "80", placeholder: "e.g. mountain biking", value: d.topic });
-    var kw = inp("tiKw", { maxlength: "80", placeholder: "e.g. beginner bike trail", value: d.keyword });
-    var aud = inp("tiAud", { maxlength: "60", placeholder: "e.g. new riders", value: d.audience });
-    var lang = sel("tiLang", LANGS), fmt = sel("tiFmt", FMTS);
-    var title = inp("tiTitle", { maxlength: "100", placeholder: "Your video title", value: d.title });
-    var desc = ta("tiDesc", { maxlength: "5000", placeholder: "Your video description", value: d.description });
-    var tc = h("div", { class: "counter" }), dc = h("div", { class: "counter" });
-    var sync = function () {
-      S.title = { title: title.value.slice(0, 100), description: desc.value.slice(0, 5000), topic: topic.value.trim(), keyword: kw.value.trim(), audience: aud.value.trim() };
-      counter(tc, title.value.length, 100); counter(dc, desc.value.length, 5000);
-    };
-    [topic, kw, aud, title, desc].forEach(function (el) { el.addEventListener("input", sync); });
-    body.append(panel(h("p", { class: "muted", text: "Title ideas are filled from fixed patterns using your words. Titles are limited to 100 characters. Not AI-generated." }),
-      h("div", { class: "grid2" }, field("Topic", topic), field("Main keyword", kw), field("Audience", aud), field("Language", lang), field("Format", fmt)),
-      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Generate suggestions", onclick: genTitles })),
-      note("tiNote"), h("ol", { id: "tiOut", class: "list" }),
-      field("Your title", title), tc, field("Description (edit freely)", desc), dc,
-      h("div", { class: "row" },
-        h("button", { class: "btn ghost sm", type: "button", text: "Copy title", onclick: function () { copy(title.value.trim(), "Title"); } }),
-        h("button", { class: "btn ghost sm", type: "button", text: "Copy description", onclick: function () { copy(desc.value.trim(), "Description"); } }),
-        h("button", { class: "btn ghost sm", type: "button", text: "Save draft to projects", onclick: function () {
-          if (!title.value.trim() && !desc.value.trim()) { toast("Write a title or description first.", true); return; }
-          saveProject("title", title.value.trim().slice(0, 40) || "Title draft", { title: title.value.trim(), description: desc.value, topic: topic.value.trim(), keyword: kw.value.trim(), audience: aud.value.trim() });
-        } }))));
-    sync();
+    var topic = inp("tiTopic", { maxlength: "100", placeholder: "e.g. budget cooking", value: d.topic });
+    var aud = inp("tiAud", { maxlength: "80", placeholder: "e.g. students", value: d.audience });
+    var tone = sel("tiTone", TONES, d.tone || "friendly");
+    var lang = sel("tiLang", LANGS, d.lang || "English");
+    var fmt = sel("tiFmt", FMTS, d.fmt || "long");
+    body.append(guide([
+      "Type your topic in one or two words, for example: budget cooking.",
+      "Add your audience, for example: students. Pick a tone and format.",
+      "Press Generate. You get titles, a description, hashtags and keywords.",
+      "Press Copy on each part, or Save all to projects to keep them."
+    ]));
+    body.append(panel(h("p", { class: "muted", text: "Built from your topic and audience using fixed patterns. Not AI-generated. Edit before you publish." }),
+      h("div", { class: "grid2" }, field("Topic", topic), field("Audience", aud), field("Tone", tone), field("Language", lang), field("Format", fmt)),
+      h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Generate title, description, hashtags & keywords", onclick: genTitles })),
+      note("tiNote")));
+    body.append(h("div", { id: "tiResults" }));
+    paintTitles();
+  }
+  function resultPanel(title, btnLabel, copyText, content) {
+    return panel(h("h3", { text: title }), content,
+      h("div", { class: "row" }, h("button", { class: "btn ghost sm", type: "button", text: btnLabel, onclick: function () { copy(copyText, title); } })));
+  }
+  function paintTitles() {
+    var box = $("tiResults"); if (!box) return;
+    var d = S.title;
+    if (!d.titles || !d.titles.length) { box.replaceChildren(); return; }
+    box.replaceChildren(
+      resultPanel("1. Titles", "Copy all titles", d.titles.join("\n"),
+        h("ol", { class: "list" }, d.titles.map(function (t) {
+          return h("li", {}, h("span", { text: t }), h("button", { class: "btn ghost sm", type: "button", text: "Copy", onclick: function () { copy(t, "Title"); } }));
+        }))),
+      resultPanel("2. Description", "Copy description", d.description, h("div", { class: "ai-out" }, d.description)),
+      resultPanel("3. Hashtags", "Copy hashtags", d.hashtags, h("div", { class: "ai-out" }, d.hashtags)),
+      resultPanel("4. Keywords", "Copy keywords", d.keywords, h("div", { class: "ai-out" }, d.keywords)),
+      h("div", { class: "row" }, h("button", { class: "btn sm", type: "button", text: "Save all to projects", onclick: function () {
+        saveProject("title", (d.topic || "Titles").slice(0, 40), JSON.parse(JSON.stringify(S.title)));
+      } })));
   }
   function genTitles() {
-    var topic = $("tiTopic").value.trim(), kw = $("tiKw").value.trim();
-    if (!topic && !kw) { setNote("tiNote", "Type a topic or a keyword first.", "err"); return; }
-    var short = $("tiFmt").value === "shorts";
-    var v = { n: topic || kw, k: kw || topic, a: $("tiAud").value.trim() || "beginners", d: short ? "under a minute" : "one video" };
-    var items = TITLE_T.map(function (t) { return clip(fill(t, v), 100); });
-    $("tiOut").replaceChildren.apply($("tiOut"), items.map(function (t) {
-      return h("li", {}, h("div", {}, h("div", { text: t }), h("div", { class: "small", text: t.length + " / 100 characters" })),
-        h("button", { class: "btn ghost sm", type: "button", text: "Use", onclick: function () { var ti = $("tiTitle"); ti.value = t; ti.dispatchEvent(new Event("input")); } }));
-    }));
-    var d = $("tiDesc"); d.value = fill(DESC_T, { k: v.k, a: v.a }).slice(0, 5000); d.dispatchEvent(new Event("input"));
-    setNote("tiNote", "Template suggestions and a description draft. Edit before you publish. Not AI-generated." + langNote($("tiLang").value), "");
+    var topic = $("tiTopic").value.trim();
+    if (!topic) { setNote("tiNote", "Type a topic first.", "err"); return; }
+    var aud = $("tiAud").value.trim() || "beginners", tone = $("tiTone").value, lang = $("tiLang").value, fmt = $("tiFmt").value;
+    var v = { k: topic.toLowerCase(), n: topic, a: aud };
+    var list = TITLE_STYLES.map(function (st) { return st[1][0]; })
+      .concat([TITLE_STYLES[0][1][1], TITLE_STYLES[1][1][1]])
+      .map(function (tp) {
+        var t = clip(fill(tp, v), 100);
+        if (tone === "excited" && t.length <= 98) t += "!";
+        return t;
+      });
+    S.title = {
+      topic: topic, audience: aud, tone: tone, lang: lang, fmt: fmt,
+      titles: list,
+      description: fill(DESC2, { k: topic.toLowerCase(), a: aud, cta: CTA[tone] }).slice(0, 2000),
+      hashtags: makeTags(topic, aud, fmt),
+      keywords: makeKeys(topic, aud)
+    };
+    paintTitles();
+    setNote("tiNote", "Made from your topic and audience. Edit before you publish. Not AI-generated." + langNote(lang), "ok");
   }
 
   /* 7. Channel Audit (link check + your checklist) */
@@ -778,6 +978,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     var lang = sel("hkLang", LANGS, r ? r.language : "English");
     var dur = sel("hkDur", DURS.map(function (x) { return [String(x[0]), x[1]]; }), "60");
     var hk = h("ol", { id: "hkHooks", class: "list" }), sc = h("ol", { id: "hkScript", class: "list" });
+    body.append(guide(["Type your video topic and who it is for.", "Choose a language and target length, then press Generate hooks & outline.", "Pick one hook from the list. Read the timed outline below it.", "Press Copy outline, or Save to projects to keep it."]));
     body.append(panel(h("p", { class: "muted", text: "Hooks and the outline use fixed patterns filled with your words. Edit the results before you record. Not AI-generated." }),
       h("div", { class: "grid2" }, field("Video topic", topic), field("Audience", aud), field("Language", lang), field("Target duration", dur)),
       h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Generate hooks & outline", onclick: genHooks })),
