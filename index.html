@@ -68,7 +68,7 @@ input[type=checkbox]{width:20px;height:20px;min-height:0;padding:0;accent-color:
 #thCanvas{display:block;width:100%;height:auto;aspect-ratio:16/9;border-radius:18px;background:#000;box-shadow:var(--shadow)}
 .checklist{display:grid;gap:6px;margin-top:8px}.checklist label{display:flex;align-items:center;gap:10px;margin:0;padding:10px 12px;border-radius:16px;background:var(--surf);color:var(--text);font-size:15px;font-weight:600;cursor:pointer}
 .task{display:flex;align-items:center;gap:12px}.task label{flex:1;min-width:0;margin:0;display:flex;gap:10px;align-items:center;color:var(--text)}.task.done span{text-decoration:line-through;color:var(--muted)}
-.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,220%);max-width:92%;background:var(--bg2);border:1px solid var(--line);padding:12px 16px;border-radius:16px;box-shadow:var(--shadow);z-index:60;font-size:14px;transition:transform .25s ease}.toast.show{transform:translate(-50%,0)}.toast.err{color:var(--err);border-color:var(--err)}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));transform:translate(-50%,220%);max-width:92%;background:var(--bg2);border:1px solid var(--line);padding:12px 16px;border-radius:16px;box-shadow:var(--shadow);z-index:60;font-size:14px;visibility:hidden;pointer-events:none;transition:transform .25s ease,visibility .25s}.toast.show{transform:translate(-50%,0);visibility:visible;pointer-events:auto}.toast.err{color:var(--err);border-color:var(--err)}
 @media(min-width:960px){.toast{bottom:24px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 html.no-motion *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
@@ -320,7 +320,6 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     q.addEventListener("input", function () { S.query = q.value; paintHome(); });
     root.append(
       h("section", { class: "card hero" },
-        h("span", { class: "eyebrow", text: "YouTube Creator Toolkit" }),
         h("h1", {}, "Plan, research and polish ", h("span", { class: "gt", text: "every upload" })),
         h("p", { class: "muted", text: "Find video ideas, design thumbnails, write titles and tags, and plan what you post. Tools that need live YouTube data are clearly labelled." }),
         h("div", { class: "row" }, h("a", { class: "btn", href: "#/tool/ideas", text: "Start with an idea" }), h("a", { class: "btn ghost", href: "#/tools", text: "Browse all tools" }))),
@@ -517,7 +516,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     var b = $("topicList"); if (!b) return;
     if (!S.data.topics.length) { b.replaceChildren(h("div", { class: "empty" }, h("p", { class: "small", text: "No topics yet." }))); return; }
     b.replaceChildren.apply(b, S.data.topics.map(function (t) {
-      return h("li", {}, h("div", {}, h("strong", { text: t.name }), h("div", { class: "small", text: "Source: " + t.source + " · added " + fmtDate(t.added) })),
+      return h("div", { class: "item" }, h("div", {}, h("strong", { text: t.name }), h("div", { class: "small", text: "Source: " + t.source + " · added " + fmtDate(t.added) })),
         h("button", { class: "btn danger sm", type: "button", text: "Remove", onclick: function () { commit(function (d) { d.topics = d.topics.filter(function (x) { return x.id !== t.id; }); }); paintTopics(); } }));
     }));
   }
@@ -764,7 +763,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     var b = $("cpList"); if (!b) return;
     if (!S.data.competitors.length) { b.replaceChildren(h("div", { class: "empty" }, h("p", { class: "small", text: "No competitors added yet." }))); return; }
     b.replaceChildren.apply(b, S.data.competitors.map(function (c) {
-      return h("li", {}, h("div", {}, h("strong", { text: c.name }), h("div", { class: "small", text: "Source: entered by you" }),
+      return h("div", { class: "item" }, h("div", {}, h("strong", { text: c.name }), h("div", { class: "small", text: "Source: entered by you" }),
           c.channel ? h("div", { class: "small", text: c.channel }) : null,
           h("div", { class: "small", text: "Subscribers (your note): " + (c.subs || "not entered") + " · Topic: " + (c.topic || "not entered") + " · Uploads: " + (c.freq || "not entered") }),
           c.notes ? h("div", { class: "small", text: "Notes: " + c.notes }) : null),
