@@ -149,7 +149,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
   var TOOLS = [
     { id: "ideas", name: "Video Idea Generator", short: "Idea Generator", cat: "create", icon: "i-bulb", tone: "t-mint", featured: true, st: ["tpl", "Template · not AI"], desc: "Structured video ideas from your niche and audience." },
     { id: "trends", name: "Trending Topics", short: "Trending Topics", cat: "research", icon: "i-trend", tone: "t-blue", featured: false, st: ["api", "Needs API"], desc: "Log topics you see yourself. Live trends need a YouTube API." },
-    { id: "thumbs", name: "AI Thumbnail Maker", short: "Thumbnail Maker", cat: "seo", icon: "i-thumb", tone: "t-peach", featured: true, st: ["ok", "Works now"], desc: "Build a thumbnail from a prompt or your text, add your photo, download PNG." },
+    { id: "thumbs", name: "AI Thumbnail Maker", short: "Thumbnail Maker", cat: "seo", icon: "i-thumb", tone: "t-peach", featured: true, st: ["ok", "Works now"], desc: "Build a thumbnail from a prompt or your text, add your photo or an AI background, download PNG." },
     { id: "analyzer", name: "Video Analyzer", short: "Video Analyzer", cat: "research", icon: "i-eye", tone: "t-rose", featured: false, st: ["api", "Needs API"], desc: "Checks a YouTube link. Analysis needs a connected API." },
     { id: "seo", name: "SEO Keywords & Tags", short: "SEO Tags", cat: "seo", icon: "i-tag", tone: "t-mint", featured: true, st: ["ok", "Works now"], desc: "Clean, de-duplicate and organise your keywords." },
     { id: "titles", name: "Title & Description", short: "Titles", cat: "create", icon: "i-pen", tone: "t-peach", featured: false, st: ["tpl", "Template · not AI"], desc: "Titles, description, hashtags and keywords from your topic." },
@@ -178,7 +178,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
   var STOP = { the: 1, and: 1, for: 1, with: 1, how: 1, what: 1, your: 1, you: 1, this: 1, that: 1, from: 1, are: 1, was: 1, not: 1, but: 1, can: 1, all: 1, into: 1, about: 1, best: 1, make: 1, using: 1 };
   var COLOURS = { red: "#C0182B", blue: "#1D4E89", green: "#1E7A4C", black: "#111111", purple: "#5B2A86", orange: "#E8741E", yellow: "#F2C230", pink: "#D9467A", brown: "#6B4226", navy: "#14213D" };
 
-  var S = { data: load(), cat: "all", query: "", pending: null, depth: 0, back: false, motionOff: false, idea: null, hook: null, seo: "", tt: null, img: null,
+  var S = { data: load(), cat: "all", query: "", pending: null, depth: 0, back: false, motionOff: false, idea: null, hook: null, seo: "", tt: null, img: null, bgImg: null,
     title: { topic: "", audience: "", tone: "friendly", lang: "English", fmt: "long", titles: [], description: "", hashtags: "", keywords: "" },
     thumb: { head: "", sub: "", bg: "#801B3A", fg: "#FFF7FA", layout: "left", size: 96, shade: true, prompt: "" } };
 
@@ -260,6 +260,25 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
       return r.json().catch(function () { return { success: false, error: "The server sent an unexpected reply." }; });
     }).catch(function () {
       return { success: false, error: "Could not reach the AI server. The free server may be waking up. Wait 1 minute and try again." };
+    });
+  }
+  function askImage(prompt) {
+    return fetch(API + "/image", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: prompt })
+    }).then(function (r) {
+      return r.json().catch(function () { return { success: false, error: "The server sent an unexpected reply." }; });
+    }).catch(function () {
+      return { success: false, error: "Could not reach the AI picture server. Wait 1 minute and try again." };
+    });
+  }
+  function imageFromData(mime, data) {
+    return new Promise(function (resolve, reject) {
+      var im = new Image();
+      im.onload = function () { resolve(im); };
+      im.onerror = function () { reject(new Error("bad image")); };
+      im.src = "data:" + mime + ";base64," + data;
     });
   }
   function aiPanel(task, getText, label) {
@@ -475,7 +494,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
         h("div", { class: "row" },
           h("button", { class: "btn ghost sm", type: "button", onclick: exportAll, text: "Export all data (JSON)" }),
           h("button", { class: "btn danger sm", type: "button", onclick: clearAll, text: "Clear all saved data" }))),
-      panel(h("h3", { text: "Privacy and AI" }), h("p", { class: "muted", text: "Template tools run only in this browser. AI buttons send only the text you type to the MotionMind AI server, which forwards it to a free AI service. Photos you upload to the thumbnail maker never leave your device. No account is used. Tools labelled Needs API are not connected to live YouTube data yet." })));
+      panel(h("h3", { text: "Privacy and AI" }), h("p", { class: "muted", text: "Template tools run only in this browser. AI text buttons send only the text you type to the MotionMind AI server, which forwards it to a free AI service. AI picture buttons send only your picture description to Google's paid image service. Photos you upload to the thumbnail maker never leave your device. No account is used. Tools labelled Needs API are not connected to live YouTube data yet." })));
   }
   function clearAll() {
     if (!window.confirm("Clear all saved projects, topics, competitor notes and tasks on this device? This cannot be undone.")) return;
@@ -574,7 +593,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     }));
   }
 
-  /* 3. Thumbnail Maker: prompt, manual text (no limit), photo upload, PNG download */
+  /* 3. Thumbnail Maker: prompt, manual text (no limit), photo upload, AI picture background, PNG download */
   function parsePrompt(p) {
     var out = { head: "", sub: "", bg: null, fg: null, layout: null };
     var q = (String(p).match(/"[^"]+"|“[^”]+”/g) || []).map(function (s) { return s.slice(1, -1).trim(); });
@@ -611,17 +630,18 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     }
     return { big: big, small: small, hl: hl, sl: sl, total: total };
   }
-  function drawThumb(c, t, img) {
+  function drawThumb(c, t, photo, bgPic) {
     var x = c.getContext("2d"), W = c.width, H = c.height;
     x.save();
     x.fillStyle = t.bg; x.fillRect(0, 0, W, H);
-    if (img) {
-      var s = Math.max(W / img.width, H / img.height), dw = img.width * s, dh = img.height * s;
-      x.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
+    var src = photo || bgPic;
+    if (src) {
+      var s = Math.max(W / src.width, H / src.height), dw = src.width * s, dh = src.height * s;
+      x.drawImage(src, (W - dw) / 2, (H - dh) / 2, dw, dh);
       if (t.shade) { x.fillStyle = "rgba(0,0,0,0.45)"; x.fillRect(0, 0, W, H); }
     }
     var center = t.layout === "center", bar = t.layout === "bar";
-    var pad = 70, maxW = (bar || center || !img) ? W - 2 * pad : W * 0.6 - pad;
+    var pad = 70, maxW = (bar || center || !src) ? W - 2 * pad : W * 0.6 - pad;
     var areaTop = 0, areaH = H;
     if (bar) { areaTop = H * 0.5; areaH = H * 0.5; x.fillStyle = "rgba(0,0,0,0.55)"; x.fillRect(0, areaTop, W, areaH); }
     var L = fitLayout(x, t.head, t.sub, maxW, areaH * 0.9, t.size);
@@ -648,18 +668,20 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     var fg = h("input", { id: "thFg", type: "color", value: t.fg });
     var shade = h("input", { id: "thShade", type: "checkbox", checked: t.shade !== false });
     var file = h("input", { id: "thFile", type: "file", accept: "image/*" });
+    var picDesc = ta("thPicDesc", { maxlength: "1000", placeholder: "e.g. a calm mountain lake at sunset, warm orange light" });
     var cv = h("canvas", { id: "thCanvas", width: "1280", height: "720", role: "img", "aria-label": "Thumbnail preview" });
     var topicIn = inp("thTopic", { placeholder: "e.g. budget cooking for students", maxlength: "100" });
     var ai = aiPanel("thumbnail", function () { return topicIn.value; }, "Get AI headline ideas");
+    var picBtn = h("button", { class: "btn", type: "button", text: "Make AI picture" });
 
     body.append(guide([
       "Option A: write a prompt. Put your headline in quotes, add a colour word like red or blue, and add center, left or bottom bar for layout. Press Build thumbnail from prompt.",
-      "Option B: skip the prompt and type your headline and sub-text directly in step 2. There is no character limit. Long text is made smaller to fit.",
-      "Step 3 (optional): upload your own photo. It stays on your phone.",
-      "Step 4: check the preview, then press Download PNG. Use Save design to keep it in projects."
+      "Option B: skip the prompt and type your headline and sub-text in step 2. There is no character limit. Long text is made smaller to fit.",
+      "Step 3 (optional): upload your own photo, or make an AI picture background in step 4. Your photo stays on your phone.",
+      "Step 5: check the preview, then press Download PNG. Use Save design to keep it in projects."
     ]));
     body.append(panel(h("h3", { text: "1. Write a prompt (optional)" }),
-      h("p", { class: "muted", text: "This builds the layout from your words: quoted text, colour words and layout words. It does not draw a new picture. For a picture, use the photo in step 3." }),
+      h("p", { class: "muted", text: "This builds the layout from your words: quoted text, colour words and layout words." }),
       field("Your prompt", prompt),
       h("div", { class: "row" }, h("button", { class: "btn", type: "button", text: "Build thumbnail from prompt", onclick: applyPrompt })),
       note("thNote")));
@@ -669,12 +691,17 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
       field("Layout", lay),
       h("div", { class: "field" }, h("label", { for: "thSize", text: "Font size" }), size, so),
       h("div", { class: "grid2" }, field("Background colour", bg), field("Text colour", fg)),
-      h("div", { class: "row" }, shade, h("span", { text: "Dark shade behind photo, for easier reading" }))));
+      h("div", { class: "row" }, shade, h("span", { text: "Dark shade behind picture, for easier reading" }))));
     body.append(panel(h("h3", { text: "3. Add your photo (optional)" }),
-      h("p", { class: "muted", text: "Use your own photo, or a photo of someone who has given you permission. The photo stays on this device and is not uploaded anywhere." }),
+      h("p", { class: "muted", text: "Use your own photo, or a photo of someone who has given you permission. The photo stays on this device. If you add a photo, it is shown instead of the AI picture." }),
       file,
       h("div", { class: "row" }, h("button", { class: "btn ghost sm", type: "button", text: "Remove photo", onclick: function () { S.img = null; file.value = ""; sync(); } }))));
-    body.append(panel(h("h3", { text: "4. Preview and download" }),
+    body.append(panel(h("h3", { text: "4. Make an AI picture background (paid)" }),
+      h("p", { class: "muted", text: "Describe the picture. Google's paid image AI draws it, with no text in it. Your headline is added by this tool on top. Each picture costs a small amount, so use it only when you need it." }),
+      field("Describe the picture", picDesc),
+      h("div", { class: "row" }, picBtn, h("button", { class: "btn ghost sm", type: "button", text: "Remove AI picture", onclick: function () { S.bgImg = null; sync(); setNote("thAiNote", "AI picture removed.", "ok"); } })),
+      note("thAiNote")));
+    body.append(panel(h("h3", { text: "5. Preview and download" }),
       h("div", { class: "thumb-grid" }, h("div", {}, cv), h("div", {}, h("p", { class: "small", text: "Preview is 16:9, the same size as a YouTube thumbnail. Download gives a 1280 × 720 PNG." }))),
       h("div", { class: "row" },
         h("button", { class: "btn", type: "button", text: "Download PNG", onclick: dlThumb }),
@@ -682,7 +709,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
           if (!S.thumb.head.trim()) { toast("Add a headline before saving.", true); return; }
           saveProject("thumb", S.thumb.head.slice(0, 40), Object.assign({}, S.thumb));
         } })),
-      h("p", { class: "small mt", text: "Projects save the text and colours. The photo is not saved, so upload it again after opening a project." })));
+      h("p", { class: "small mt", text: "Projects save the text and colours. Pictures are not saved, so upload or make them again after opening a project." })));
     body.append(panel(h("h3", { text: "AI headline ideas" }),
       h("p", { class: "muted", text: "AI gives text ideas only. Copy any idea into the headline box in step 2." }),
       field("What is your video about?", topicIn),
@@ -696,7 +723,7 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
         size: ci(size.value, 48, 140, 96), shade: shade.checked, prompt: prompt.value
       };
       so.textContent = S.thumb.size + " px";
-      drawThumb(cv, S.thumb, S.img);
+      drawThumb(cv, S.thumb, S.img, S.bgImg);
     }
     function applyPrompt() {
       var r = parsePrompt(prompt.value);
@@ -709,6 +736,25 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
       sync();
       setNote("thNote", "Thumbnail built from your prompt. You can still edit the text in step 2.", "ok");
     }
+    picBtn.addEventListener("click", function () {
+      var p = picDesc.value.trim();
+      if (!p) { setNote("thAiNote", "Describe the picture first.", "err"); return; }
+      if (!window.confirm("This makes a paid AI picture. Continue?")) return;
+      picBtn.disabled = true;
+      setNote("thAiNote", "Making the AI picture. This can take up to 1 minute.", "ok");
+      askImage(p).then(function (r) {
+        if (r && r.success && r.data) {
+          return imageFromData(r.mimeType, r.data).then(function (im) {
+            S.bgImg = im;
+            setNote("thAiNote", S.img ? "AI picture ready. Your uploaded photo is shown on top, so remove the photo in step 3 to see the AI picture." : "AI picture added as background.", "ok");
+            sync();
+          });
+        }
+        setNote("thAiNote", (r && r.error) || "Could not make the picture. Try again.", "err");
+      }).catch(function () {
+        setNote("thAiNote", "Could not load the picture. Try again.", "err");
+      }).then(function () { picBtn.disabled = false; });
+    });
     file.addEventListener("change", function () {
       var f = file.files && file.files[0];
       if (!f) return;
