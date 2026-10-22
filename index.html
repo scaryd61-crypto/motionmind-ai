@@ -319,10 +319,6 @@ html.no-motion *{transition:none!important;animation:none!important;scroll-behav
     var q = h("input", { id: "homeSearch", type: "search", placeholder: "Search tools, e.g. thumbnail or tags", "aria-label": "Search tools", maxlength: "40", autocomplete: "off", value: S.query });
     q.addEventListener("input", function () { S.query = q.value; paintHome(); });
     root.append(
-      h("section", { class: "card hero" },
-        h("h1", {}, "Plan, research and polish ", h("span", { class: "gt", text: "every upload" })),
-        h("p", { class: "muted", text: "Find video ideas, design thumbnails, write titles and tags, and plan what you post. Tools that need live YouTube data are clearly labelled." }),
-        h("div", { class: "row" }, h("a", { class: "btn", href: "#/tool/ideas", text: "Start with an idea" }), h("a", { class: "btn ghost", href: "#/tools", text: "Browse all tools" }))),
       h("div", { class: "search" }, icon("i-search"), q),
       h("div", { id: "homeBody" }));
     paintHome();
